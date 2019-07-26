@@ -1234,7 +1234,425 @@ var dataObject = {
 				},
 	        },
 	    },
-	}
+	},
+
+	JasPartners : {
+		"Ritaharju community center" : {
+			"Fiware-ServicePath" : "/loc_102",
+			"Fiware-Service" : "jas_oulu",
+			"id" : {
+				"c_fill_level_15min" : {
+					"attributes" : {
+						"fillLevel" : {
+							"type" : "fillLevelCounter",
+							"description" : "Fill level",
+							"unitCode" : "",
+						},
+					},
+				},
+				"visitors_day" : {
+					"attributes" : {
+						"visitorsIn" : {
+							"type" : "visitorCounter",
+							"description" : "Number of visitors going in per day",
+							"unitCode" : "",
+						},
+						"visitorsOut" : {
+							"type" : "visitorCounter",
+							"description" : "Number of visitors going out per day",
+							"unitCode" : "",
+						},
+					},
+				},
+			},
+		},
+	},
+
+	Ymparistotalo : {
+		"Room 201" : {
+			"Fiware-ServicePath" : "/f/2/201",
+			"Fiware-Service" : "ymp",
+			"id" : {
+				"thp-830" : {
+					"attributes" : {
+						"airPressure" : {
+							"type" : "AirQualityObserved",
+							"description" : "Air pressure",
+							"unitCode" : "MBR",
+						},
+						"relativeHumidity" : {
+							"type" : "AirQualityObserved",
+							"description" : "Relative humidity",
+							"unitCode" : "P1",
+						},
+						"temperature" : {
+							"type" : "AirQualityObserved",
+							"description" : "Temperature",
+							"unitCode" : "CEL",
+						},
+					},
+				},
+				"thp-831" : {
+					"attributes" : {
+						"airPressure" : {
+							"type" : "AirQualityObserved",
+							"description" : "Air pressure",
+							"unitCode" : "MBR",
+						},
+						"relativeHumidity" : {
+							"type" : "AirQualityObserved",
+							"description" : "Relative humidity",
+							"unitCode" : "P1",
+						},
+						"temperature" : {
+							"type" : "AirQualityObserved",
+							"description" : "Temperature",
+							"unitCode" : "CEL",
+						},
+					},
+				},
+				"thpc-850" : {
+					"attributes" : {
+						"CO2" : {
+							"type" : "AirQualityObserved",
+							"description" : "Carbon Dioxide",
+							"unitCode" : "59",
+						},
+						"airPressure" : {
+							"type" : "AirQualityObserved",
+							"description" : "Air pressure",
+							"unitCode" : "MBR",
+						},
+						"relativeHumidity" : {
+							"type" : "AirQualityObserved",
+							"description" : "Relative humidity",
+							"unitCode" : "P1",
+						},
+						"temperature" : {
+							"type" : "AirQualityObserved",
+							"description" : "Temperature",
+							"unitCode" : "CEL",
+						},
+					},
+				},
+			},
+		},
+		"Room 211" : {
+			"Fiware-ServicePath" : "/f/2/211",
+			"Fiware-Service" : "ymp",
+			"id" : {
+				"thp-832" : {
+					"attributes" : {
+						"airPressure" : {
+							"type" : "AirQualityObserved",
+							"description" : "Air pressure",
+							"unitCode" : "MBR",
+						},
+						"relativeHumidity" : {
+							"type" : "AirQualityObserved",
+							"description" : "Relative humidity",
+							"unitCode" : "P1",
+						},
+						"temperature" : {
+							"type" : "AirQualityObserved",
+							"description" : "Temperature",
+							"unitCode" : "CEL",
+						},
+					},
+				},
+				"thp-833" : {
+					"attributes" : {
+						"airPressure" : {
+							"type" : "AirQualityObserved",
+							"description" : "Air pressure",
+							"unitCode" : "MBR",
+						},
+						"relativeHumidity" : {
+							"type" : "AirQualityObserved",
+							"description" : "Relative humidity",
+							"unitCode" : "P1",
+						},
+						"temperature" : {
+							"type" : "AirQualityObserved",
+							"description" : "Temperature",
+							"unitCode" : "CEL",
+						},
+					},
+				},
+				"thpc-851" : {
+					"attributes" : {
+						"airPressure" : {
+							"type" : "AirQualityObserved",
+							"description" : "Air pressure",
+							"unitCode" : "MBR",
+						},
+						"relativeHumidity" : {
+							"type" : "AirQualityObserved",
+							"description" : "Relative humidity",
+							"unitCode" : "P1",
+						},
+						"temperature" : {
+							"type" : "AirQualityObserved",
+							"description" : "Temperature",
+							"unitCode" : "CEL",
+						},
+					},
+				},
+			},
+		},
+		"Room 213" : {
+			"Fiware-ServicePath" : "/f/2/213",
+			"Fiware-Service" : "ymp",
+			"id" : {
+				"thp-834" : {
+					"attributes" : {
+						"airPressure" : {
+							"type" : "AirQualityObserved",
+							"description" : "Air pressure",
+							"unitCode" : "MBR",
+						},
+						"relativeHumidity" : {
+							"type" : "AirQualityObserved",
+							"description" : "Relative humidity",
+							"unitCode" : "P1",
+						},
+						"temperature" : {
+							"type" : "AirQualityObserved",
+							"description" : "Temperature",
+							"unitCode" : "CEL",
+						},
+					},
+				},
+				"thp-835" : {
+					"attributes" : {
+						"airPressure" : {
+							"type" : "AirQualityObserved",
+							"description" : "Air pressure",
+							"unitCode" : "MBR",
+						},
+						"relativeHumidity" : {
+							"type" : "AirQualityObserved",
+							"description" : "Relative humidity",
+							"unitCode" : "P1",
+						},
+						"temperature" : {
+							"type" : "AirQualityObserved",
+							"description" : "Temperature",
+							"unitCode" : "CEL",
+						},
+					},
+				},
+				"thpc-852" : {
+					"attributes" : {
+						"airPressure" : {
+							"type" : "AirQualityObserved",
+							"description" : "Air pressure",
+							"unitCode" : "MBR",
+						},
+						"relativeHumidity" : {
+							"type" : "AirQualityObserved",
+							"description" : "Relative humidity",
+							"unitCode" : "P1",
+						},
+						"temperature" : {
+							"type" : "AirQualityObserved",
+							"description" : "Temperature",
+							"unitCode" : "CEL",
+						},
+					},
+				},
+			},
+		},
+		"Room 246" : {
+			"Fiware-ServicePath" : "/f/2/246",
+			"Fiware-Service" : "ymp",
+			"id" : {
+				"thp-836" : {
+					"attributes" : {
+						"airPressure" : {
+							"type" : "AirQualityObserved",
+							"description" : "Air pressure",
+							"unitCode" : "MBR",
+						},
+						"relativeHumidity" : {
+							"type" : "AirQualityObserved",
+							"description" : "Relative humidity",
+							"unitCode" : "P1",
+						},
+						"temperature" : {
+							"type" : "AirQualityObserved",
+							"description" : "Temperature",
+							"unitCode" : "CEL",
+						},
+					},
+				},
+				"thp-837" : {
+					"attributes" : {
+						"airPressure" : {
+							"type" : "AirQualityObserved",
+							"description" : "Air pressure",
+							"unitCode" : "MBR",
+						},
+						"relativeHumidity" : {
+							"type" : "AirQualityObserved",
+							"description" : "Relative humidity",
+							"unitCode" : "P1",
+						},
+						"temperature" : {
+							"type" : "AirQualityObserved",
+							"description" : "Temperature",
+							"unitCode" : "CEL",
+						},
+					},
+				},
+				"thpc-853" : {
+					"attributes" : {
+						"airPressure" : {
+							"type" : "AirQualityObserved",
+							"description" : "Air pressure",
+							"unitCode" : "MBR",
+						},
+						"relativeHumidity" : {
+							"type" : "AirQualityObserved",
+							"description" : "Relative humidity",
+							"unitCode" : "P1",
+						},
+						"temperature" : {
+							"type" : "AirQualityObserved",
+							"description" : "Temperature",
+							"unitCode" : "CEL",
+						},
+					},
+				},
+			},
+		},
+		"Room 249" : {
+			"Fiware-ServicePath" : "/f/2/249",
+			"Fiware-Service" : "ymp",
+			"id" : {
+				"thp-838" : {
+					"attributes" : {
+						"airPressure" : {
+							"type" : "AirQualityObserved",
+							"description" : "Air pressure",
+							"unitCode" : "MBR",
+						},
+						"relativeHumidity" : {
+							"type" : "AirQualityObserved",
+							"description" : "Relative humidity",
+							"unitCode" : "P1",
+						},
+						"temperature" : {
+							"type" : "AirQualityObserved",
+							"description" : "Temperature",
+							"unitCode" : "CEL",
+						},
+					},
+				},
+				"thp-839" : {
+					"attributes" : {
+						"airPressure" : {
+							"type" : "AirQualityObserved",
+							"description" : "Air pressure",
+							"unitCode" : "MBR",
+						},
+						"relativeHumidity" : {
+							"type" : "AirQualityObserved",
+							"description" : "Relative humidity",
+							"unitCode" : "P1",
+						},
+						"temperature" : {
+							"type" : "AirQualityObserved",
+							"description" : "Temperature",
+							"unitCode" : "CEL",
+						},
+					},
+				},
+				"thpc-854" : {
+					"attributes" : {
+						"airPressure" : {
+							"type" : "AirQualityObserved",
+							"description" : "Air pressure",
+							"unitCode" : "MBR",
+						},
+						"relativeHumidity" : {
+							"type" : "AirQualityObserved",
+							"description" : "Relative humidity",
+							"unitCode" : "P1",
+						},
+						"temperature" : {
+							"type" : "AirQualityObserved",
+							"description" : "Temperature",
+							"unitCode" : "CEL",
+						},
+					},
+				},
+			},
+		},
+		"Room 265" : {
+			"Fiware-ServicePath" : "/f/2/265",
+			"Fiware-Service" : "ymp",
+			"id" : {
+				"thp-840" : {
+					"attributes" : {
+						"airPressure" : {
+							"type" : "AirQualityObserved",
+							"description" : "Air pressure",
+							"unitCode" : "MBR",
+						},
+						"relativeHumidity" : {
+							"type" : "AirQualityObserved",
+							"description" : "Relative humidity",
+							"unitCode" : "P1",
+						},
+						"temperature" : {
+							"type" : "AirQualityObserved",
+							"description" : "Temperature",
+							"unitCode" : "CEL",
+						},
+					},
+				},
+				"thp-841" : {
+					"attributes" : {
+						"airPressure" : {
+							"type" : "AirQualityObserved",
+							"description" : "Air pressure",
+							"unitCode" : "MBR",
+						},
+						"relativeHumidity" : {
+							"type" : "AirQualityObserved",
+							"description" : "Relative humidity",
+							"unitCode" : "P1",
+						},
+						"temperature" : {
+							"type" : "AirQualityObserved",
+							"description" : "Temperature",
+							"unitCode" : "CEL",
+						},
+					},
+				},
+				"thpc-855" : {
+					"attributes" : {
+						"airPressure" : {
+							"type" : "AirQualityObserved",
+							"description" : "Air pressure",
+							"unitCode" : "MBR",
+						},
+						"relativeHumidity" : {
+							"type" : "AirQualityObserved",
+							"description" : "Relative humidity",
+							"unitCode" : "P1",
+						},
+						"temperature" : {
+							"type" : "AirQualityObserved",
+							"description" : "Temperature",
+							"unitCode" : "CEL",
+						},
+					},
+				},
+			},
+		},
+	},
 }
 
 // TO-DO: main gets initialized by another widget sending infoOld type object to it.
