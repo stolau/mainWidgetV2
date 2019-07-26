@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="aui" name="sandBox_tester" version="0.0.8">
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="aui" name="mainWidgetV2" version="0.1.2">
     <details>
-        <title>sandBox_tester</title>
+        <title>mainWidgetV2</title>
         <homepage>https://github.com/wirecloud-fiware/quick-start-development-tutorial</homepage>
         <authors>Anssi Uistola, Pekka Okkonen</authors>
         <contributors>noepe</contributors>
@@ -15,12 +15,36 @@
     </details>
     <contents src="index.html" useplatformstyle="true"/>
 	<rendering width="240" height="50%"/>
-	
+
     <wiring>
+        <inputendpoint
+                name="AggrMethod"
+                label="AggrMethod"
+                type="text"/>
+        <inputendpoint
+                name="AggrPeriod"
+                label="AggrPeriod"
+                type="text"/>
+        <inputendpoint
+                name="Dates"
+                label="Dates"
+                type="text"/>
+        <inputendpoint
+                name="nValue"
+                label="nValue"
+                type="text"/>
+        <inputendpoint
+                name="Minutes"
+                label="Minutes"
+                type="text"/>
         <outputendpoint
                 name="sendCurl"
                 label="Creates curls"
                 type="text"/>
+        <outputendpoint
+                name="Graph"
+                label="Graph"
+                type="text"/>
     </wiring>
-	
+
 </widget>
