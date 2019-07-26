@@ -79,8 +79,8 @@
 
 var aggrMethod = 'max';
 var aggrPeriod = 'hour';
-var inputDates = ["2019-03-01T00:00", "2019-03-10T00:00"];
-var inputNValue = '40';
+var inputDates = ["2019-01-01T00:00", "2019-07-31T00:00"];
+var inputNValue = '42';
 var minutes = '10';
 
 // Create buttons for every data source on platform
@@ -177,7 +177,7 @@ function createRoomButton(sourceName, roomName, object) {
 			// Other dataset function the same
 			} else {
 				for (var i = 0; i < rooms.length; i++) {
-					var dataButton = createDataButton(sourceName, roomName, rooms[i], object);
+					var dataButton = createDataButton(sourceName, roomName, rooms[i], object, "");
 					tab.appendChild(dataButton);
 				}
 			}
@@ -204,7 +204,8 @@ function createDataButton(sourceName, roomName, deviceName, object, alertButton)
 	}
 	btn.style.backgroundColor = "#008CBA";
 	btn.style.color = "white";
-	var date = alertButton.slice(31);
+	btn.style["margin-bottom"] = "1px";
+
 
 	// Request data from server
 	btn.onclick = async function() {
@@ -214,26 +215,26 @@ function createDataButton(sourceName, roomName, deviceName, object, alertButton)
 		var valueList = [];
 
 		for (var a=0; a < attribute.length; a++) {
-			console.log(object[sourceName][roomName].id[deviceName].attributes);
 			var type = object[sourceName][roomName].id[deviceName].attributes[attribute[a]].type;
 			var description = object[sourceName][roomName].id[deviceName].attributes[attribute[a]].description;
 			var unit = object[sourceName][roomName].id[deviceName].attributes[attribute[a]].unit;
-			console.log(type)
-			console.log(description)
 
 			if (sourceName === "Siptronix") {
+				var alertDate = new Date(alertButton.slice(31));
+				var titles = [roomName, minutes + " minutes around " + alertDate, "", "y-axel"];
+				var alertFrom = alertDate.setMinutes(alertDate.getMinutes() - parseInt(minutes));
+				var alertTo = alertDate.setMinutes(alertDate.getMinutes() + 2*parseInt(minutes));
 				var cometUrl = "https://cors-anywhere.herokuapp.com/pan0107.panoulu.net:8000/comet/STH/v1/contextEntities";
 					cometUrl += "/type/" + type + "/id/" + deviceName;
 					cometUrl += "/attributes/" + attribute[a] + "?lastN=100";
-					cometUrl += "&dateFrom=" + inputDates[0] + "&dateTo=" + inputDates[1];
-					var titles = [roomName, "From " + inputDates[0] + " to " + inputDates[1], "", "y-axel"];
+					cometUrl += "&dateFrom=" + alertFrom + "&dateTo=" + alertTo;
 			// Timeperiod search
 			} else if (!inputNValue) {
 				var cometUrl = "https://cors-anywhere.herokuapp.com/pan0107.panoulu.net:8000/comet/STH/v1/contextEntities";
 					cometUrl += "/type/" + type + "/id/" + deviceName;
 					cometUrl += "/attributes/" + attribute[a] + "?aggrMethod=" + aggrMethod + "&aggrPeriod=" + aggrPeriod;
 					cometUrl += "&dateFrom=" + inputDates[0] + "&dateTo=" + inputDates[1];
-					var titles = [roomName, "From " + inputDates[0] + " to " + inputDates[1], "", unit];
+				var titles = [roomName, "From " + inputDates[0] + " to " + inputDates[1], "", unit];
 			// LastN search
 			} else {
 				var cometUrl = "https://cors-anywhere.herokuapp.com/pan0107.panoulu.net:8000/comet/STH/v1/contextEntities";
@@ -278,8 +279,17 @@ function createDataButton(sourceName, roomName, deviceName, object, alertButton)
 		// LastN search
 		} else {
 			for (var i=0; i < values.length; i++) {
-				valueList[a].data.push(parseFloat(parseFloat(values[i].attrValue).toFixed(1)));
-				categories.push(new Date(values[i].recvTime));
+				if (typeof values[i].attrValue === "object") {
+					var valueL1 = values[i].attrValue.L1;
+					var valueL2 = values[i].attrValue.L2;
+					var valueL3 = values[i].attrValue.L3;
+					var avgValue = (valueL1 + valueL2 + valueL3) / 3;
+					valueList[a].data.push(parseFloat(parseFloat(avgValue).toFixed(1)));
+					categories.push(new Date(values[i].recvTime));
+				} else {
+					valueList[a].data.push(parseFloat(parseFloat(values[i].attrValue).toFixed(1)));
+					categories.push(new Date(values[i].recvTime));
+				}
 			}
 		}
 
