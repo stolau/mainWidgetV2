@@ -245,12 +245,10 @@ function sendCurl(info) {
 function sendCSV(dates, values) {
 	
 	var context = {
-		"dates" : dates,
-		
-		"values" : {
-			values,
-		}
+		dates,	
+		values,
 	};
+	console.log(context);
 	MashupPlatform.wiring.pushEvent("sendCSV", context);
 }
 
