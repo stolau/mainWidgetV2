@@ -83,11 +83,16 @@ function createRoomButton(sourceName, roomName, object) {
 				var valueList = [];
 				// Creates valueList
 				// Checks if value is integer
+				var masterString
 				for(var i = 0; i < names.length; i++) {
 					var b = response[i].data.value[names[i]];
 					if((typeof(b) == "number") || (typeof(b) == "float")) {
 						valueList.push({name: names[i], data: []});
 					}
+					else {
+						masterString += b;
+					}
+					// TO-DO: Laita bulbtype toimimaan
 				}
 				for (var i=0; i < response.length; i++) {
 					var dataButton = createDataButton(sourceName, roomName, rooms[i], object, response[i].id);
