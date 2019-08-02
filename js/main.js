@@ -32,17 +32,25 @@ function createSourceButton(sourceName, object) {
 	var btn = document.createElement("BUTTON");
 	// var rooms = Object.keys(object[sourceName]);
 	var rooms = Object.keys(object);
-
+	var btnList = [];
 	btn.innerHTML = sourceName;
 	btn.style.backgroundColor = "#EAEDED";
 
 	btn.onclick = function() {
 		if (!activated) {
-			tab.style.border = "1px ridge green";
-			for (var i = 0; i < rooms.length; i++) {
-				// var roomBtn = createRoomButton(sourceName, rooms[i], object);
-				var roomBtn = createRoomButton(sourceName, rooms[i], object[rooms[i]]);
-				tab.appendChild(roomBtn);
+			// Checks if buttons are already created.
+			// Else it reads already stored buttons.
+			if(btnList.length <= 0) {
+				tab.style.border = "1px ridge green";
+				for(var i = 0; i < rooms.length; i++) {
+					var roomBtn = createRoomButton(sourceName, rooms[i], object[rooms[i]]);
+					btnList.push(roomBtn);
+					tab.appendChild(roomBtn);
+				}
+			} else {
+				for(var k = 0; k < btnList.length; k++) {
+					tab.appendChild(btnList[k]);
+				}
 			}
 			btn.style.backgroundColor = "#acb9b9";
 			activated = true;
@@ -68,52 +76,71 @@ function createRoomButton(sourceName, roomName, object) {
 	btn.innerHTML = roomName;
 	btn.style.backgroundColor = "#4CAF50";
 	btn.style.color = "white";
-
+	var btnList = [];
 	btn.onclick = async function() {
+		console.log("btnList length: " + btnList.length);
 		if (!activated) {
-			
-			if (object["AutomatedTime"]) {
-				var headers = await getHeader(object["Fiware-AlertServicePath"], object["Fiware-Service"]);
-				var response = await browser("http://pan0107.panoulu.net:8000/orion/v2/entities?limit=300&options=count&orderBy=id", headers);
-				console.log(response);
-				var categories = [];
-				var titles = [roomName, "Light bulb status on each alert", "", "Bulb count"];
-				var names = Object.keys(response[0].data.value);
-				console.log(names);
-				var valueList = [];
-				// Creates valueList
-				// Checks if value is integer
-				for(var i = 0; i < names.length; i++) {
-					var b = response[i].data.value[names[i]];
-					if((typeof(b) == "number") || (typeof(b) == "float")) {
-						valueList.push({name: names[i], data: []});
+			// Checks if buttons been created before
+			// Stores old buttons to btnList 
+			if(btnList.length <= 0) {
+				if (object["AutomatedTime"]) {
+					var headers = await getHeader(object["Fiware-AlertServicePath"], object["Fiware-Service"]);
+					var response = await browser("http://pan0107.panoulu.net:8000/orion/v2/entities?limit=300&options=count&orderBy=id", headers);
+					console.log(response);
+					var categories = [];
+					var titles = [roomName, "Light bulb status on each alert", "", "Bulb count"];
+					var names = Object.keys(response[0].data.value);
+					console.log(names);
+					var valueList = [];
+					// Creates valueList
+					// Checks if value is integer
+					for(var i = 0; i < names.length; i++) {
+						var b = response[i].data.value[names[i]];
+						if((typeof(b) == "number") || (typeof(b) == "float")) {
+							valueList.push({name: names[i], data: []});
+						}
+					}
+					for (var i=0; i < response.length; i++) {
+						var dataButton = createDataButton(sourceName, roomName, rooms[i], object, response[i].id);
+						btnList.push(dataButton);
+						tab.appendChild(dataButton);
+						console.log(response[i]);
+						for(var j = 0; j < valueList.length; j++) {
+							valueList[j].data.push(response[i].data.value[valueList[j].name]);
+						}
+						// TO-DO: Find way to find type (response[i].data.value.bulbType
+						categories.push(new Date(response[i].dateIssued.value) + " - " + response[i].data.value.bulbType);
+					}
+					console.log(valueList)
+					sendGraph(valueList, categories, titles)
+					// Other dataset function the same
+				} else {
+					for (var i = 0; i < rooms.length; i++) {
+						var dataButton = createDataButton(sourceName, roomName, rooms[i], object, "");
+						btnList.push(dataButton);
+						tab.appendChild(dataButton);
 					}
 				}
-				for (var i=0; i < response.length; i++) {
-					var dataButton = createDataButton(sourceName, roomName, rooms[i], object, response[i].id);
-					tab.appendChild(dataButton);
-					console.log(response[i]);
-					for(var j = 0; j < valueList.length; j++) {
-						valueList[j].data.push(response[i].data.value[valueList[j].name]);
-					}
-					// TO-DO: Find way to find type (response[i].data.value.bulbType
-					categories.push(new Date(response[i].dateIssued.value) + " - " + response[i].data.value.bulbType);
-				}
-				console.log(valueList)
-				sendGraph(valueList, categories, titles)
-			// Other dataset function the same
-			} else {
-				for (var i = 0; i < rooms.length; i++) {
-					var dataButton = createDataButton(sourceName, roomName, rooms[i], object, "");
-					tab.appendChild(dataButton);
-				}
-			}
 			tab.style.border = "1px ridge blue";
 			btn.style.backgroundColor = "#2f6a31";
 			activated = true;
+			}
+			else {
+				tab.style.border = "1px ridge blue";
+				for(var k = 0; k < btnList.length; k++) {
+					tab.appendChild(btnList[k]);
+					btnList[k].style.backgroundColor;
+					console.log("Kaydaaks");
+				}
+				activated = true;
+			}
 		} else {
+			// TO-DO: Way to find and remove only the buttons in btnList
 			tab.style.border = "";
 			tab.innerHTML = '';
+			/*for(var k = 0; k < btnList; k++) {
+				tab.removeChild(btnList[k]);
+			}*/
 			btn.style.backgroundColor = "#4CAF50";
 			activated = false;
 		}
@@ -132,10 +159,12 @@ function createDataButton(sourceName, roomName, deviceName, object, alertButton)
 	btn.style.backgroundColor = "#008CBA";
 	btn.style.color = "white";
 	btn.style["margin-bottom"] = "1px";
-
-
+	// btn.setAttribute("testInt", 1);
+	var testInt = 0;
 	// Request data from server
 	btn.onclick = async function() {
+		testInt += 1;
+		console.log(testInt);
 		// console.log(Object.keys(object.id[deviceName]))
 		var attribute = Object.keys(object.id[deviceName].attributes);
 
