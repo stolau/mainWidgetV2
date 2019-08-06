@@ -1,87 +1,83 @@
 'use strict';
 
 
-// var infoOld = {
-// 	ymp : {
-// 		"Fiware-Service" : "ymp",
-// 		"Fiware-ServicePath" :
-// 			["/f/2/221",
-// 			"/f/2/213",
-// 			"/f/2/246",
-// 			"/f/2/265",
-// 			"/f/2/249",
-// 			"/f/2/201"]
-// 	},
-// 	tal : {
-// 		"Fiware-Service" : "tal",
-// 		"Fiware-ServicePath" :
-// 			["/f/1/190",
-// 			"/f/1/118",
-// 			"/f/1/161",
-// 			"/f/1/143",
-// 			"/f/1/227",
-// 			"/f/1/114",
-// 			"/f/1/152",
-// 			"/f/1/116",
-// 			"/f/2/229",
-// 			"/f/2/202",
-// 			"/f/2/228",
-// 			"/f/2/226",
-// 			"/f/2/230",
-// 			"/f/2/225",
-// 			"/f/2/232",
-// 			"/f/2/231",
-// 			"/f/2/233",
-// 			"/f/2/205",
-// 			"/f/3/302"]
-// 	},
-//
-// 	jas_oulu : {
-// 		"Fiware-Service" : "jas_oulu",
-// 		"Fiware-ServicePath" :
-// 			["/loc_102"]
-// 	},
-// 	weather : {
-// 		"Fiware-Service" : "weather",
-// 		"Fiware-ServicePath" :
-// 			["/oulu"]
-// 	},
-// 	siptronix : {
-// 		"Fiware-Service" : "siptronix",
-// 		"Fiware-ServicePath" :
-// 			["/oulu",
-// 			"/oulu/ritaharju_monitoimitalo/alerts"]
-// 	},
-// 	aqvaio : {
-// 		"Fiware-Service" : "aqvaio",
-// 		"Fiware-ServicePath" :
-// 			["/oulu"]
-// 	}
-// };
+var infoOld = {
+	ymp : {
+		"Fiware-Service" : "ymp",
+		"Fiware-ServicePath" :
+			["/f/2/221",
+			"/f/2/213",
+			"/f/2/246",
+			"/f/2/265",
+			"/f/2/249",
+			"/f/2/201"]
+	},
+	tal : {
+		"Fiware-Service" : "tal",
+		"Fiware-ServicePath" :
+			["/f/1/190",
+			"/f/1/118",
+			"/f/1/161",
+			"/f/1/143",
+			"/f/1/227",
+			"/f/1/114",
+			"/f/1/152",
+			"/f/1/116",
+			"/f/2/229",
+			"/f/2/202",
+			"/f/2/228",
+			"/f/2/226",
+			"/f/2/230",
+			"/f/2/225",
+			"/f/2/232",
+			"/f/2/231",
+			"/f/2/233",
+			"/f/2/205",
+			"/f/3/302"]
+	},
+
+	jas_oulu : {
+		"Fiware-Service" : "jas_oulu",
+		"Fiware-ServicePath" :
+			["/loc_102"]
+	},
+	weather : {
+		"Fiware-Service" : "weather",
+		"Fiware-ServicePath" :
+			["/oulu"]
+	},
+	siptronix : {
+		"Fiware-Service" : "siptronix",
+		"Fiware-ServicePath" :
+			["/oulu",
+			"/oulu/ritaharju_monitoimitalo/alerts"]
+	},
+	aqvaio : {
+		"Fiware-Service" : "aqvaio",
+		"Fiware-ServicePath" :
+			["/oulu"]
+	}
+};
+
+
 
 // For CURL widget tests
-// var infoC = {
-// 	"Room 114" : {
-// 		Headers : {
-// 			"Fiware-ServicePath" : "/f/1/114",
-// 			"Fiware-Service" : "tal",
-// 		},
-// 		url: "pan0107.panoulu.net:8000/comet/STH/v1/contextEntities/type/AirQualityObserved/id/11122/attributes/tk11te22?aggrMethod=max&aggrPeriod=minute&dateFrom=2019-01-01T00:00&dateTo=2019-05-15T00:00",
-// 	},
-// 	"Room 116" : {
-// 		Headers : {
-// 			"Fiware-ServicePath" : "/f/1/116",
-// 			"Fiware-Service" : "tal",
-// 		},
-// 		url: "pan0107.panoulu.net:8000/comet/STH/v1/contextEntities/type/AirQualityObserved/id/11121/attributes/tk11te21?aggrMethod=max&aggrPeriod=minute&dateFrom=2019-01-01T00:00&dateTo=2019-05-15T00:00",
-// 	},
-// };
-
-var aggrMethod = 'max';
-var aggrPeriod = 'hour';
-var inputDates = ["2019-01-01T00:00", "2019-07-31T00:00"];
-var inputNValue = '42';
-var minutes = '10';
+var infoC = {
+	"Room 114" : {
+		Headers : {
+			"Fiware-ServicePath" : "/f/1/114",
+			"Fiware-Service" : "tal",
+		},
+		url: "pan0107.panoulu.net:8000/comet/STH/v1/contextEntities/type/AirQualityObserved/id/11122/attributes/tk11te22?aggrMethod=max&aggrPeriod=minute&dateFrom=2019-01-01T00:00&dateTo=2019-05-15T00:00",
+	},
+	"Room 116" : {
+		Headers : {
+			"Fiware-ServicePath" : "/f/1/116",
+			"Fiware-Service" : "tal",
+		},
+		url: "pan0107.panoulu.net:8000/comet/STH/v1/contextEntities/type/AirQualityObserved/id/11121/attributes/tk11te21?aggrMethod=max&aggrPeriod=minute&dateFrom=2019-01-01T00:00&dateTo=2019-05-15T00:00",
+	},
+};
 
 // Create buttons for every data source on platform
 async function mainNew(object) {
@@ -91,18 +87,12 @@ async function mainNew(object) {
 	// document.body.innerHTML = '';
 	var tab = document.getElementsByClassName("sourceContainer")[0];
 	var names = Object.keys(object);
-	console.log(object)
 
 	for(var i = 0; i < names.length; i++) {
 		var mainBtn = createSourceButton(names[i], object);
+		console.log(object)
 		tab.appendChild(mainBtn);
 	}
-
-	MashupPlatform.wiring.registerCallback('AggrMethod', function(agmet) {aggrMethod=agmet; console.log("dates: "+ agmet)});
-	MashupPlatform.wiring.registerCallback('AggrPeriod', function(agper) {aggrPeriod=agper; console.log("dates: "+ agper)});
-	MashupPlatform.wiring.registerCallback('Dates', function(data) {inputDates=data; console.log("dates: "+ data)});
-    MashupPlatform.wiring.registerCallback('nValue', function(data2) {inputNValue=data2; console.log(`nvalue: ${data2}`)});
-    MashupPlatform.wiring.registerCallback('Minutes', function(mins) {minutes=mins; console.log(`minutes: ${mins}`)});
 }
 
 function createSourceButton(sourceName, object) {
@@ -116,19 +106,15 @@ function createSourceButton(sourceName, object) {
 
 	btn.onclick = function() {
 		if (!activated) {
-			tab.style.border = "1px ridge green";
 			for (var i = 0; i < rooms.length; i++) {
 				var roomBtn = createRoomButton(sourceName, rooms[i], object);
 				tab.appendChild(roomBtn);
 			}
-			btn.style.backgroundColor = "#acb9b9";
+			btn.style.backgroundColor = "MediumSeaGreen";
 			activated = true;
 		} else {
 			console.log("Kaydaaks");
-			tab.style.border = "";
-			tab.innerHTML = "";
-			document.getElementsByClassName("deviceContainer")[0].innerHTML = "";
-			document.getElementsByClassName("deviceContainer")[0].style.border = "";
+			tab.innerHTML = '';
 			activated = false;
 			btn.style.backgroundColor = "#EAEDED";
 		}
@@ -139,176 +125,85 @@ function createSourceButton(sourceName, object) {
 function createRoomButton(sourceName, roomName, object) {
 	var activated = false;
 	var btn = document.createElement("BUTTON");
-	var tab = document.getElementsByClassName("deviceContainer")[0];
+	var tab = document.getElementsByClassName("tabcontent")[0];
 	var rooms = Object.keys(object[sourceName][roomName].id);
 	btn.innerHTML = roomName;
-	btn.style.backgroundColor = "#4CAF50";
-	btn.style.color = "white";
+	btn.style.backgroundColor = "#EAEDED";
 
-	btn.onclick = async function() {
+	btn.onclick = function() {
 		if (!activated) {
-			// Siptronix needs to fetch alerts
-
-			if (sourceName === "Siptronix") {
-				var headers = await getHeader("/oulu/ritaharju_monitoimitalo/alerts", "siptronix");
-				var response = await browser("http://pan0107.panoulu.net:8000/orion/v2/entities?limit=300&options=count&orderBy=id", headers);
-				console.log(response)
-				var categories = [];
-				var titles = [roomName, "Light bulb status on each alert", "", "Bulb count"];;
-				var names = Object.keys(response[0].data.value)
-				console.log(names)
-				var valueList = [
-					{ name: names[0], data: []},
-					{ name: names[3], data: []},
-					{ name: names[1], data: []},
-					{ name: names[4], data: []},
-				]
-				for (var i=0; i < response.length; i++) {
-					var dataButton = createDataButton(sourceName, roomName, rooms[0], object, response[i].id);
-					tab.appendChild(dataButton);
-					valueList[0].data.push(response[i].data.value.bulbCountBurned);
-					valueList[1].data.push(response[i].data.value.bulbCountTotal);
-					valueList[2].data.push(response[i].data.value.bulbsBurnedNew);
-					valueList[3].data.push(response[i].data.value.bulbsReplacedNew);
-					categories.push(new Date(response[i].dateIssued.value) + " - " + response[i].data.value.bulbType);
-				}
-				console.log(valueList)
-				sendGraph(valueList, categories, titles)
-			// Other dataset function the same
-			} else {
-				for (var i = 0; i < rooms.length; i++) {
-					var dataButton = createDataButton(sourceName, roomName, rooms[i], object, "");
-					tab.appendChild(dataButton);
-				}
+			for (var i = 0; i < rooms.length; i++) {
+				var dataButton = createDataButton(sourceName, roomName, rooms[i], object);
+				tab.appendChild(dataButton);
 			}
-			tab.style.border = "1px ridge blue";
-			btn.style.backgroundColor = "#2f6a31";
+			btn.style.backgroundColor = "MediumSeaGreen";
 			activated = true;
 		} else {
-			tab.style.border = "";
 			console.log("Kaydaaks");
 			tab.innerHTML = '';
-			btn.style.backgroundColor = "#4CAF50";
+			btn.style.backgroundColor = "#EAEDED";
 			activated = false;
 		}
 	}
 	return btn;
 }
 
-function createDataButton(sourceName, roomName, deviceName, object, alertButton) {
+function createDataButton(sourceName, roomName, deviceName, object) {
 	var btn = document.createElement("BUTTON");
-	if (sourceName === "Siptronix") {
-		btn.innerHTML = alertButton;
-	} else {
-		btn.innerHTML = deviceName;
-	}
-	btn.style.backgroundColor = "#008CBA";
-	btn.style.color = "white";
-	btn.style["margin-bottom"] = "1px";
 
+	btn.innerHTML = deviceName;
+	btn.style.backgroundColor = "#EAEDED";
 
 	// Request data from server
 	btn.onclick = async function() {
-		console.log(Object.keys(object[sourceName][roomName].id[deviceName]))
+		console.log("dataaaaa"+ deviceName)
 		var attribute = Object.keys(object[sourceName][roomName].id[deviceName].attributes);
-
-		var valueList = [];
-
-		for (var a=0; a < attribute.length; a++) {
-			var type = object[sourceName][roomName].id[deviceName].attributes[attribute[a]].type;
-			var description = object[sourceName][roomName].id[deviceName].attributes[attribute[a]].description;
-			var unit = object[sourceName][roomName].id[deviceName].attributes[attribute[a]].unit;
-
-			if (sourceName === "Siptronix") {
-				var alertDate = new Date(alertButton.slice(31));
-				var titles = [roomName, minutes + " minutes around " + alertDate, "", "y-axel"];
-				var alertFrom = alertDate.setMinutes(alertDate.getMinutes() - parseInt(minutes));
-				var alertTo = alertDate.setMinutes(alertDate.getMinutes() + 2*parseInt(minutes));
-				var cometUrl = "https://cors-anywhere.herokuapp.com/pan0107.panoulu.net:8000/comet/STH/v1/contextEntities";
-					cometUrl += "/type/" + type + "/id/" + deviceName;
-					cometUrl += "/attributes/" + attribute[a] + "?lastN=100";
-					cometUrl += "&dateFrom=" + alertFrom + "&dateTo=" + alertTo;
-			// Timeperiod search
-			} else if (!inputNValue) {
-				var cometUrl = "https://cors-anywhere.herokuapp.com/pan0107.panoulu.net:8000/comet/STH/v1/contextEntities";
-					cometUrl += "/type/" + type + "/id/" + deviceName;
-					cometUrl += "/attributes/" + attribute[a] + "?aggrMethod=" + aggrMethod + "&aggrPeriod=" + aggrPeriod;
-					cometUrl += "&dateFrom=" + inputDates[0] + "&dateTo=" + inputDates[1];
-				var titles = [roomName, "From " + inputDates[0] + " to " + inputDates[1], "", unit];
-			// LastN search
-			} else {
-				var cometUrl = "https://cors-anywhere.herokuapp.com/pan0107.panoulu.net:8000/comet/STH/v1/contextEntities";
-					cometUrl += "/type/" + type + "/id/" + deviceName;
-					cometUrl += "/attributes/" + attribute[a] + "?lastN=" + inputNValue;
-				var titles = [roomName + " - " + deviceName, "Last " + inputNValue + " measurements", "", unit];
-			}
-
+		var type = object[sourceName][roomName].id[deviceName].attributes[attribute].type;
+		var cometUrl = "https://cors-anywhere.herokuapp.com/pan0107.panoulu.net:8000/comet/STH/v1/contextEntities";
+		cometUrl = cometUrl + "/type/" + type + "/id/" + deviceName;
+		cometUrl = cometUrl + "/attributes/" + attribute + "?lastN=50";
 		console.log(cometUrl)
 
 		var servicePath = object[sourceName][roomName]["Fiware-ServicePath"];
 		var service = object[sourceName][roomName]["Fiware-Service"];
+
+		console.log("Haetaan dataa")
 		var headers = await getHeader(servicePath, service);
 		var response = await browser(cometUrl, headers);
+		console.log("Data haettu:")
+
 		console.log(response)
-
-		var values = response.contextResponses[0].contextElement.attributes[0].values;
-		var categories = [];
-		valueList.push({
-			name: description,
-			data: []
-		})
-
-		// Timeperiod data
-		if (!inputNValue) {
-			for (var i=0; i < values.length; i++) {
-				for (var j=0; j < values[i].points.length; j++) {
-					var date = new Date(values[i]._id.origin);
-					valueList[a].data.push(values[i].points[j].max);
-					if (aggrPeriod === "minute") {
-						date.setMinutes(date.getMinutes() + values[i].points[j].offset);
-					} else if (aggrPeriod === "hour") {
-						date.setHours(date.getHours() + values[i].points[j].offset);
-					} else if (aggrPeriod === "day") {
-						date.setDate(date.getDate() + values[i].points[j].offset);
-					} else if (aggrPeriod === "month") {
-						date.setMonth(date.getMonth() + values[i].points[j].offset);
-					}
-					categories.push(new Date(date));
-				}
-			}
-		// LastN search
-		} else {
-			for (var i=0; i < values.length; i++) {
-				if (typeof values[i].attrValue === "object") {
-					var valueL1 = values[i].attrValue.L1;
-					var valueL2 = values[i].attrValue.L2;
-					var valueL3 = values[i].attrValue.L3;
-					var avgValue = (valueL1 + valueL2 + valueL3) / 3;
-					valueList[a].data.push(parseFloat(parseFloat(avgValue).toFixed(1)));
-					categories.push(new Date(values[i].recvTime));
-				} else {
-					valueList[a].data.push(parseFloat(parseFloat(values[i].attrValue).toFixed(1)));
-					categories.push(new Date(values[i].recvTime));
-				}
-			}
-		}
-
-		console.log("values:");
-		console.log(valueList);
-		// console.log(categories);
-		}
-		sendGraph(valueList, categories, titles)
 	}
+
 	return btn;
 }
 
-function sendGraph(values, categories, titles) {
+function sendGraph(values, titles, update) {
 	// Function gets tempList and name outputs graph to Highcharts
 	// Connect Graph to Highcharts Options in wiring mode.
+
+	// valueList contains list of lists where [0] = data values,
+	// [1] = xAxis label
+	// [2] = name of the value
+	var compValueList = [];
+
+    console.log(values)
+
+	for (var i = 0; i < values.length; i++) {
+        for (var j = 0; j < values[i].length; j++) {
+            compValueList.push({
+        		name : values[i][j][2],
+        		data : values[i][j][0],
+    		});
+        }
+	}
+    console.log(compValueList)
+
 	MashupPlatform.wiring.pushEvent("Graph", {
         titles: titles,
-        categories: categories,
-        data: values,
+        categories: values[0][0][1],
+        data: compValueList,
+        update: update,
     });
 }
 
@@ -318,9 +213,13 @@ function sendCurl(info) {
 }
 
 function browser(searchUrl, searchHeaders) {
+
 	// Sends all the requests based on URL and headers, returns JSON
 	return new Promise(resolve => {
 		setTimeout(() => {
+
+			console.log(searchUrl);
+			console.log(searchHeaders);
 			var cList = [];
 			MashupPlatform.http.makeRequest(searchUrl,{
 			method: 'GET',
@@ -373,77 +272,77 @@ function getHeader(servicePath, service) {
 	});
 }
 
-// function createMainButton(name) {
-//
-// 	var activated = false;
-//
-// 	var url = "http://pan0107.panoulu.net:8000/orion/v2/entities?limit=300&options=count&orderBy=id";
-//
-// 	var tab = document.getElementsByClassName("tabcontent")[0];
-//
-// 	var btn = document.createElement("BUTTON");
-// 	btn.innerHTML = name;
-// 	btn.onclick = async function () {
-// 		// Makes init search
-// 		if(!activated) {
-// 			for(var i = 0; i < servicePaths.length; i++) {
-// 				var servicePath = servicePaths[i];
-// 				var headers = await getHeader(servicePath, service);
-// 				var response = await browser(url, headers);
-// 				console.log(response)
-// 				if (service === "aqvaio") {
-// 					console.log("---------------asdasdasd")
-// 				}
-// 					// ----------------------------
-// 					for(var j = 0; j < response.length; j++) {
-// 						var namesResponse = Object.keys(response[j]);
-// 						for(var g = 0; g < namesResponse.length; g++) {
-// 							var k = namesResponse[g];
-// 							if(k !== 'type' && k !== 'common_name' && k !== "location" && k !== "id" && k !== "TimeInstant" &&
-// 								k !== 'area' && k !== 'capacity') {
-// 								var cometUrl = "https://cors-anywhere.herokuapp.com/pan0107.panoulu.net:8000/comet/STH/v1/contextEntities";
-// 								cometUrl = cometUrl + "/type/" + response[j]["type"] + "/id/" + response[j]["id"];
-// 								cometUrl = cometUrl + "/attributes/" + namesResponse[g] + "?lastN=50";
-//
-// 								var name = response[j]["type"] + " " + response[j]["id"] + " " + namesResponse[g];
-// 								// console.log(name)
-// 								// console.log(headers)
-// 								// console.log(cometUrl)
-// 								var subBtn = createSubButton(name, headers, cometUrl);
-// 								console.log(subBtn)
-// 								tab.appendChild(subBtn);
-// 							}
-// 						}
-// 					}
-// 					// ----------------------------
-// 			}
-// 			activated = true;
-// 		}
-// 		else {
-// 			console.log("Kaydaaks");
-// 			tab.innerHTML = '';
-// 			activated = false;
-// 		}
-// 	}
-// 	return btn;
-// }
+function createMainButton(name) {
 
-// function createSubButton(name, headers, url) {
-//
-//
-// 	var btn = document.createElement("BUTTON") ;
-// 	btn.innerHTML = name;
-// 	btn.onclick = async function () {
-// 		var response = await browser(url, headers);
-// 		console.log(response);
-// 	}
-// 	return btn;
-// }
+	var activated = false;
 
-// function createOptionsButtons() {
-// 	// TO-DO : Create optons lastN, aggrMethord etc..
-// 	// use document.getElementsByClassNAme("options")[0] to store created buttons
-// }
+	var url = "http://pan0107.panoulu.net:8000/orion/v2/entities?limit=300&options=count&orderBy=id";
+
+	var tab = document.getElementsByClassName("tabcontent")[0];
+
+	var btn = document.createElement("BUTTON");
+	btn.innerHTML = name;
+	btn.onclick = async function () {
+		// Makes init search
+		if(!activated) {
+			for(var i = 0; i < servicePaths.length; i++) {
+				var servicePath = servicePaths[i];
+				var headers = await getHeader(servicePath, service);
+				var response = await browser(url, headers);
+				console.log(response)
+				if (service === "aqvaio") {
+					console.log("---------------asdasdasd")
+				}
+					// ----------------------------
+					for(var j = 0; j < response.length; j++) {
+						var namesResponse = Object.keys(response[j]);
+						for(var g = 0; g < namesResponse.length; g++) {
+							var k = namesResponse[g];
+							if(k !== 'type' && k !== 'common_name' && k !== "location" && k !== "id" && k !== "TimeInstant" &&
+								k !== 'area' && k !== 'capacity') {
+								var cometUrl = "https://cors-anywhere.herokuapp.com/pan0107.panoulu.net:8000/comet/STH/v1/contextEntities";
+								cometUrl = cometUrl + "/type/" + response[j]["type"] + "/id/" + response[j]["id"];
+								cometUrl = cometUrl + "/attributes/" + namesResponse[g] + "?lastN=50";
+
+								var name = response[j]["type"] + " " + response[j]["id"] + " " + namesResponse[g];
+								// console.log(name)
+								// console.log(headers)
+								// console.log(cometUrl)
+								var subBtn = createSubButton(name, headers, cometUrl);
+								console.log(subBtn)
+								tab.appendChild(subBtn);
+							}
+						}
+					}
+					// ----------------------------
+			}
+			activated = true;
+		}
+		else {
+			console.log("Kaydaaks");
+			tab.innerHTML = '';
+			activated = false;
+		}
+	}
+	return btn;
+}
+
+function createSubButton(name, headers, url) {
+
+
+	var btn = document.createElement("BUTTON") ;
+	btn.innerHTML = name;
+	btn.onclick = async function () {
+		var response = await browser(url, headers);
+		console.log(response);
+	}
+	return btn;
+}
+
+function createOptionsButtons() {
+	// TO-DO : Create optons lastN, aggrMethord etc..
+	// use document.getElementsByClassNAme("options")[0] to store created buttons
+}
 
 // dataObject - Will be seperate widget later
 var dataObject = {
@@ -458,7 +357,6 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 					},
 				},
@@ -467,8 +365,7 @@ var dataObject = {
 						"value" : {
 							"type" : "Device",
 							"description" : "water reading",
-							"unitCode" : "MTQ",
-							"unit" : "litres"
+							"unitCode" : "MTQ"
 						},
 					},
 				},
@@ -484,7 +381,6 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 					},
 				},
@@ -493,8 +389,7 @@ var dataObject = {
 						"value" : {
 							"type" : "Device",
 							"description" : "water reading",
-							"unitCode" : "MTQ",
-							"unit" : "litres"
+							"unitCode" : "MTQ"
 						},
 					},
 				},
@@ -510,7 +405,6 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 					},
 				},
@@ -519,8 +413,7 @@ var dataObject = {
 						"value" : {
 							"type" : "Device",
 							"description" : "water reading",
-							"unitCode" : "MTQ",
-							"unit" : "litres"
+							"unitCode" : "MTQ"
 						},
 					},
 				},
@@ -539,67 +432,56 @@ var dataObject = {
 							"type" : "3PhaseACMeasurement",
 							"description" : "Active power",
 							"unitCode" : " ",
-							"unit" : "Watt (W)"
 						},
 						"apparentPower" : {
 							"type" : "3PhaseACMeasurement",
 							"description" : "Apparent power",
 							"unitCode" : " ",
-							"unit" : "Volt-ampere (VA)"
 						},
 						"current" : {
 							"type" : "3PhaseACMeasurement",
 							"description" : "Current",
 							"unitCode" : " ",
-							"unit" : "Ampere (A)"
 						},
 						"frequency" : {
 							"type" : "3PhaseACMeasurement",
 							"description" : "Frequency",
 							"unitCode" : " ",
-							"unit" : "Hertz (Hz)"
 						},
 						"powerFactor" : {
 							"type" : "3PhaseACMeasurement",
 							"description" : "Powerfactor",
 							"unitCode" : " ",
-							"unit" : "Number between -1 and 1"
 						},
 						"reactivePower" : {
 							"type" : "3PhaseACMeasurement",
 							"description" : "Reactive power",
 							"unitCode" : " ",
-							"unit" : "Volt-ampere reactive (VAR)"
 						},
 						"totalActiveEnergyImport" : {
 							"type" : "3PhaseACMeasurement",
 							"description" : "Total active energy import",
 							"unitCode" : " ",
-							"unit" : "Kilowatt hour (kWh)"
 						},
 						"totalActivePower" : {
 							"type" : "3PhaseACMeasurement",
 							"description" : "Total active power",
 							"unitCode" : " ",
-							"unit" : "Watt (W)"
 						},
 						"totalApparentPower" : {
 							"type" : "3PhaseACMeasurement",
 							"description" : "Total apparent power",
 							"unitCode" : " ",
-							"unit" : "Volt-ampere (VA)"
 						},
 						"totalReactivePower" : {
 							"type" : "3PhaseACMeasurement",
 							"description" : "Total reactive power",
 							"unitCode" : " ",
-							"unit" : "Watt (W)"
 						},
 						"voltage" : {
 							"type" : "3PhaseACMeasurement",
 							"description" : "Voltage",
 							"unitCode" : " ",
-							"unit" : "Volt (V)"
 						},
 					},
 				},
@@ -618,7 +500,6 @@ var dataObject = {
 						"type" : "AirQualityObserved",
 						"description" : "Temperature",
 						"unitCode" : "CEL",
-						"unit" : "Celsius (°C)"
 						},
 					},
 				},
@@ -636,7 +517,6 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 					},
 				},
@@ -654,7 +534,6 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 					},
 				},
@@ -672,13 +551,11 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Carbon dioxide",
 							"unitCode" : "59",
-							"unit" : "Parts-per notation (PPM)"
 						},
 						"tk08te22" : {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 					},
 				},
@@ -696,13 +573,11 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 						"tk04qe20" : {
 							"type" : "AirQualityObserved",
 							"description" : "Carbon Dioxide",
 							"unitCode" : "59",
-							"unit" : "Parts-per notation (PPM)"
 						},
 					},
 				},
@@ -712,7 +587,6 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 					},
 				},
@@ -722,13 +596,11 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 						"tk04qe24" : {
 							"type" : "AirQualityObserved",
 							"description" : "Carbon Dioxide",
 							"unitCode" : "59",
-							"unit" : "Parts-per notation (PPM)"
 						},
 					},
 				},
@@ -738,7 +610,6 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 					},
 				},
@@ -748,13 +619,11 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 						"tk04qe22" : {
 							"type" : "AirQualityObserved",
 							"description" : "Carbon Dioxide",
 							"unitCode" : "59",
-							"unit" : "Parts-per notation (PPM)"
 						},
 					},
 				},
@@ -764,7 +633,6 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 					},
 				},
@@ -780,13 +648,11 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Carbon dioxide",
 							"unitCode" : "59",
-							"unit" : "Parts-per notation (PPM)"
 						},
 						"tk03_te22" : {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 					},
 				},
@@ -796,13 +662,11 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Carbon dioxide",
 							"unitCode" : "59",
-							"unit" : "Parts-per notation (PPM)"
 						},
 						"tk03_te23" : {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 					},
 				},
@@ -812,25 +676,21 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Carbon dioxide",
 							"unitCode" : "59",
-							"unit" : "Parts-per notation (PPM)"
 						},
 						"rio202_h" : {
 							"type" : "AirQualityObserved",
 							"description" : "Relative humidity",
 							"unitCode" : "P1",
-							"unit" : "Percentage (%)"
 						},
 						"rio202_t" : {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 						"rio202_v" : {
 							"type" : "AirQualityObserved",
 							"description" : "Volatile organic compound",
 							"unitCode" : "61",
-							"unit" : "Parts-per notation (PPM)"
 						},
 					},
 				},
@@ -840,7 +700,6 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Number of people",
 							"unitCode" : " ",
-							"unit" : "Number"
 						},
 					},
 				},
@@ -856,25 +715,21 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Carbon dioxide",
 							"unitCode" : "59",
-							"unit" : "Parts-per notation (PPM)"
 						},
 						"rio205_h" : {
 							"type" : "AirQualityObserved",
 							"description" : "Relative humidity",
 							"unitCode" : "P1",
-							"unit" : "Percentage (%)"
 						},
 	                    "rio205_t" : {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 	                    "rio205_v" : {
 							"type" : "AirQualityObserved",
 							"description" : "Volatile organic compound",
 							"unitCode" : "61",
-							"unit" : "Parts-per notation (PPM)"
 						},
 					},
 				},
@@ -884,7 +739,6 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Number of people",
 							"unitCode" : " ",
-							"unit" : "Number"
 						},
 					},
 				},
@@ -900,25 +754,21 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Carbon dioxide",
 							"unitCode" : "59",
-							"unit" : "Parts-per notation (PPM)"
 						},
 						"rio225_h" : {
 							"type" : "AirQualityObserved",
 							"description" : "Relative humidity",
 							"unitCode" : "P1",
-							"unit" : "Percentage (%)"
 						},
 	                    "rio225_t" : {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 	                    "rio225_v" : {
 							"type" : "AirQualityObserved",
 							"description" : "Volatile organic compound",
 							"unitCode" : "61",
-							"unit" : "Parts-per notation (PPM)"
 						},
 					},
 				},
@@ -934,25 +784,21 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Carbon dioxide",
 							"unitCode" : "59",
-							"unit" : "Parts-per notation (PPM)"
 						},
 						"rio226_h" : {
 							"type" : "AirQualityObserved",
 							"description" : "Relative humidity",
 							"unitCode" : "P1",
-							"unit" : "Percentage (%)"
 						},
 	                    "rio226_t" : {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 	                    "rio226_v" : {
 							"type" : "AirQualityObserved",
 							"description" : "Volatile organic compound",
 							"unitCode" : "61",
-							"unit" : "Parts-per notation (PPM)"
 						},
 					},
 				},
@@ -968,25 +814,21 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Carbon dioxide",
 							"unitCode" : "59",
-							"unit" : "Parts-per notation (PPM)"
 						},
 						"rio227_h" : {
 							"type" : "AirQualityObserved",
 							"description" : "Relative humidity",
 							"unitCode" : "P1",
-							"unit" : "Percentage (%)"
 						},
 	                    "rio227_t" : {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 	                    "rio227_v" : {
 							"type" : "AirQualityObserved",
 							"description" : "Volatile organic compound",
 							"unitCode" : "61",
-							"unit" : "Parts-per notation (PPM)"
 						},
 					},
 				},
@@ -1002,25 +844,21 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Carbon dioxide",
 							"unitCode" : "59",
-							"unit" : "Parts-per notation (PPM)"
 						},
 						"rio228_h" : {
 							"type" : "AirQualityObserved",
 							"description" : "Relative humidity",
 							"unitCode" : "P1",
-							"unit" : "Percentage (%)"
 						},
 	                    "rio228_t" : {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 	                    "rio228_v" : {
 							"type" : "AirQualityObserved",
 							"description" : "Volatile organic compound",
 							"unitCode" : "61",
-							"unit" : "Parts-per notation (PPM)"
 						},
 					},
 				},
@@ -1036,25 +874,21 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Carbon dioxide",
 							"unitCode" : "59",
-							"unit" : "Parts-per notation (PPM)"
 						},
 						"rio229_h" : {
 							"type" : "AirQualityObserved",
 							"description" : "Relative humidity",
 							"unitCode" : "P1",
-							"unit" : "Percentage (%)"
 						},
 	                    "rio229_t" : {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 	                    "rio229_v" : {
 							"type" : "AirQualityObserved",
 							"description" : "Volatile organic compound",
 							"unitCode" : "61",
-							"unit" : "Parts-per notation (PPM)"
 						},
 					},
 				},
@@ -1070,25 +904,21 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Carbon dioxide",
 							"unitCode" : "59",
-							"unit" : "Parts-per notation (PPM)"
 						},
 						"rio230_h" : {
 							"type" : "AirQualityObserved",
 							"description" : "Relative humidity",
 							"unitCode" : "P1",
-							"unit" : "Percentage (%)"
 						},
 	                    "rio230_t" : {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 	                    "rio230_v" : {
 							"type" : "AirQualityObserved",
 							"description" : "Volatile organic compound",
 							"unitCode" : "61",
-							"unit" : "Parts-per notation (PPM)"
 						},
 					},
 				},
@@ -1104,25 +934,21 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Carbon dioxide",
 							"unitCode" : "59",
-							"unit" : "Parts-per notation (PPM)"
 						},
 						"rio231_h" : {
 							"type" : "AirQualityObserved",
 							"description" : "Relative humidity",
 							"unitCode" : "P1",
-							"unit" : "Percentage (%)"
 						},
 	                    "rio231_t" : {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 	                    "rio231_v" : {
 							"type" : "AirQualityObserved",
 							"description" : "Volatile organic compound",
 							"unitCode" : "61",
-							"unit" : "Parts-per notation (PPM)"
 						},
 					},
 				},
@@ -1138,25 +964,21 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Carbon dioxide",
 							"unitCode" : "59",
-							"unit" : "Parts-per notation (PPM)"
 						},
 						"rio232_h" : {
 							"type" : "AirQualityObserved",
 							"description" : "Relative humidity",
 							"unitCode" : "P1",
-							"unit" : "Percentage (%)"
 						},
 	                    "rio232_t" : {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 	                    "rio232_v" : {
 							"type" : "AirQualityObserved",
 							"description" : "Volatile organic compound",
 							"unitCode" : "61",
-							"unit" : "Parts-per notation (PPM)"
 						},
 					},
 				},
@@ -1172,25 +994,21 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Carbon dioxide",
 							"unitCode" : "59",
-							"unit" : "Parts-per notation (PPM)"
 						},
 						"rio233_h" : {
 							"type" : "AirQualityObserved",
 							"description" : "Relative humidity",
 							"unitCode" : "P1",
-							"unit" : "Percentage (%)"
 						},
 	                    "rio233_t" : {
 							"type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 	                    "rio233_v" : {
 							"type" : "AirQualityObserved",
 							"description" : "Volatile organic compound",
 							"unitCode" : "61",
-							"unit" : "Parts-per notation (PPM)"
 						},
 					},
 				},
@@ -1206,13 +1024,11 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Carbon dioxide",
 							"unitCode" : "59",
-							"unit" : "Parts-per notation (PPM)"
 						},
 						"tk03te20" : {
 	                        "type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 					},
 				},
@@ -1222,437 +1038,17 @@ var dataObject = {
 							"type" : "AirQualityObserved",
 							"description" : "Carbon dioxide",
 							"unitCode" : "59",
-							"unit" : "Parts-per notation (PPM)"
 						},
 						"tk03te21" : {
 	                        "type" : "AirQualityObserved",
 							"description" : "Temperature",
 							"unitCode" : "CEL",
-							"unit" : "Celsius (°C)"
 						},
 					},
 				},
 	        },
 	    },
-	},
-
-	JasPartners : {
-		"Ritaharju community center" : {
-			"Fiware-ServicePath" : "/loc_102",
-			"Fiware-Service" : "jas_oulu",
-			"id" : {
-				"c_fill_level_15min" : {
-					"attributes" : {
-						"fillLevel" : {
-							"type" : "fillLevelCounter",
-							"description" : "Fill level",
-							"unitCode" : "",
-						},
-					},
-				},
-				"visitors_day" : {
-					"attributes" : {
-						"visitorsIn" : {
-							"type" : "visitorCounter",
-							"description" : "Number of visitors going in per day",
-							"unitCode" : "",
-						},
-						"visitorsOut" : {
-							"type" : "visitorCounter",
-							"description" : "Number of visitors going out per day",
-							"unitCode" : "",
-						},
-					},
-				},
-			},
-		},
-	},
-
-	Ymparistotalo : {
-		"Room 201" : {
-			"Fiware-ServicePath" : "/f/2/201",
-			"Fiware-Service" : "ymp",
-			"id" : {
-				"thp-830" : {
-					"attributes" : {
-						"airPressure" : {
-							"type" : "AirQualityObserved",
-							"description" : "Air pressure",
-							"unitCode" : "MBR",
-						},
-						"relativeHumidity" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-						"temperature" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-				"thp-831" : {
-					"attributes" : {
-						"airPressure" : {
-							"type" : "AirQualityObserved",
-							"description" : "Air pressure",
-							"unitCode" : "MBR",
-						},
-						"relativeHumidity" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-						"temperature" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-				"thpc-850" : {
-					"attributes" : {
-						"CO2" : {
-							"type" : "AirQualityObserved",
-							"description" : "Carbon Dioxide",
-							"unitCode" : "59",
-						},
-						"airPressure" : {
-							"type" : "AirQualityObserved",
-							"description" : "Air pressure",
-							"unitCode" : "MBR",
-						},
-						"relativeHumidity" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-						"temperature" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-			},
-		},
-		"Room 211" : {
-			"Fiware-ServicePath" : "/f/2/211",
-			"Fiware-Service" : "ymp",
-			"id" : {
-				"thp-832" : {
-					"attributes" : {
-						"airPressure" : {
-							"type" : "AirQualityObserved",
-							"description" : "Air pressure",
-							"unitCode" : "MBR",
-						},
-						"relativeHumidity" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-						"temperature" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-				"thp-833" : {
-					"attributes" : {
-						"airPressure" : {
-							"type" : "AirQualityObserved",
-							"description" : "Air pressure",
-							"unitCode" : "MBR",
-						},
-						"relativeHumidity" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-						"temperature" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-				"thpc-851" : {
-					"attributes" : {
-						"airPressure" : {
-							"type" : "AirQualityObserved",
-							"description" : "Air pressure",
-							"unitCode" : "MBR",
-						},
-						"relativeHumidity" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-						"temperature" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-			},
-		},
-		"Room 213" : {
-			"Fiware-ServicePath" : "/f/2/213",
-			"Fiware-Service" : "ymp",
-			"id" : {
-				"thp-834" : {
-					"attributes" : {
-						"airPressure" : {
-							"type" : "AirQualityObserved",
-							"description" : "Air pressure",
-							"unitCode" : "MBR",
-						},
-						"relativeHumidity" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-						"temperature" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-				"thp-835" : {
-					"attributes" : {
-						"airPressure" : {
-							"type" : "AirQualityObserved",
-							"description" : "Air pressure",
-							"unitCode" : "MBR",
-						},
-						"relativeHumidity" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-						"temperature" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-				"thpc-852" : {
-					"attributes" : {
-						"airPressure" : {
-							"type" : "AirQualityObserved",
-							"description" : "Air pressure",
-							"unitCode" : "MBR",
-						},
-						"relativeHumidity" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-						"temperature" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-			},
-		},
-		"Room 246" : {
-			"Fiware-ServicePath" : "/f/2/246",
-			"Fiware-Service" : "ymp",
-			"id" : {
-				"thp-836" : {
-					"attributes" : {
-						"airPressure" : {
-							"type" : "AirQualityObserved",
-							"description" : "Air pressure",
-							"unitCode" : "MBR",
-						},
-						"relativeHumidity" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-						"temperature" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-				"thp-837" : {
-					"attributes" : {
-						"airPressure" : {
-							"type" : "AirQualityObserved",
-							"description" : "Air pressure",
-							"unitCode" : "MBR",
-						},
-						"relativeHumidity" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-						"temperature" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-				"thpc-853" : {
-					"attributes" : {
-						"airPressure" : {
-							"type" : "AirQualityObserved",
-							"description" : "Air pressure",
-							"unitCode" : "MBR",
-						},
-						"relativeHumidity" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-						"temperature" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-			},
-		},
-		"Room 249" : {
-			"Fiware-ServicePath" : "/f/2/249",
-			"Fiware-Service" : "ymp",
-			"id" : {
-				"thp-838" : {
-					"attributes" : {
-						"airPressure" : {
-							"type" : "AirQualityObserved",
-							"description" : "Air pressure",
-							"unitCode" : "MBR",
-						},
-						"relativeHumidity" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-						"temperature" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-				"thp-839" : {
-					"attributes" : {
-						"airPressure" : {
-							"type" : "AirQualityObserved",
-							"description" : "Air pressure",
-							"unitCode" : "MBR",
-						},
-						"relativeHumidity" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-						"temperature" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-				"thpc-854" : {
-					"attributes" : {
-						"airPressure" : {
-							"type" : "AirQualityObserved",
-							"description" : "Air pressure",
-							"unitCode" : "MBR",
-						},
-						"relativeHumidity" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-						"temperature" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-			},
-		},
-		"Room 265" : {
-			"Fiware-ServicePath" : "/f/2/265",
-			"Fiware-Service" : "ymp",
-			"id" : {
-				"thp-840" : {
-					"attributes" : {
-						"airPressure" : {
-							"type" : "AirQualityObserved",
-							"description" : "Air pressure",
-							"unitCode" : "MBR",
-						},
-						"relativeHumidity" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-						"temperature" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-				"thp-841" : {
-					"attributes" : {
-						"airPressure" : {
-							"type" : "AirQualityObserved",
-							"description" : "Air pressure",
-							"unitCode" : "MBR",
-						},
-						"relativeHumidity" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-						"temperature" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-				"thpc-855" : {
-					"attributes" : {
-						"airPressure" : {
-							"type" : "AirQualityObserved",
-							"description" : "Air pressure",
-							"unitCode" : "MBR",
-						},
-						"relativeHumidity" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-						"temperature" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-			},
-		},
-	},
+	}
 }
 
 // TO-DO: main gets initialized by another widget sending infoOld type object to it.
