@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="aui" name="mainWidgetV2" version="0.1.2">
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="aui" name="mainWidgetV2" version="0.2.0">
     <details>
         <title>mainWidgetV2</title>
         <homepage>https://github.com/wirecloud-fiware/quick-start-development-tutorial</homepage>
@@ -18,25 +18,14 @@
 
     <wiring>
         <inputendpoint
-                name="AggrMethod"
-                label="AggrMethod"
+                name="recStartObject"
+                label="recStartObject"
                 type="text"/>
         <inputendpoint
-                name="AggrPeriod"
-                label="AggrPeriod"
+                name="recSearchInfo"
+                label="recSearchInfo"
                 type="text"/>
-        <inputendpoint
-                name="Dates"
-                label="Dates"
-                type="text"/>
-        <inputendpoint
-                name="nValue"
-                label="nValue"
-                type="text"/>
-        <inputendpoint
-                name="Minutes"
-                label="Minutes"
-                type="text"/>
+
         <outputendpoint
                 name="sendCurl"
                 label="Creates curls"
@@ -45,6 +34,9 @@
                 name="Graph"
                 label="Graph"
                 type="text"/>
+        <outputendpoint
+                name="sendCSV"
+                label="CSV"
+                type="text"/>
     </wiring>
-
 </widget>

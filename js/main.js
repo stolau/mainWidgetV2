@@ -1,237 +1,402 @@
 'use strict';
 
-
-var infoOld = {
-	ymp : {
-		"Fiware-Service" : "ymp",
-		"Fiware-ServicePath" :
-			["/f/2/221",
-			"/f/2/213",
-			"/f/2/246",
-			"/f/2/265",
-			"/f/2/249",
-			"/f/2/201"]
-	},
-	tal : {
-		"Fiware-Service" : "tal",
-		"Fiware-ServicePath" :
-			["/f/1/190",
-			"/f/1/118",
-			"/f/1/161",
-			"/f/1/143",
-			"/f/1/227",
-			"/f/1/114",
-			"/f/1/152",
-			"/f/1/116",
-			"/f/2/229",
-			"/f/2/202",
-			"/f/2/228",
-			"/f/2/226",
-			"/f/2/230",
-			"/f/2/225",
-			"/f/2/232",
-			"/f/2/231",
-			"/f/2/233",
-			"/f/2/205",
-			"/f/3/302"]
-	},
-
-	jas_oulu : {
-		"Fiware-Service" : "jas_oulu",
-		"Fiware-ServicePath" :
-			["/loc_102"]
-	},
-	weather : {
-		"Fiware-Service" : "weather",
-		"Fiware-ServicePath" :
-			["/oulu"]
-	},
-	siptronix : {
-		"Fiware-Service" : "siptronix",
-		"Fiware-ServicePath" :
-			["/oulu",
-			"/oulu/ritaharju_monitoimitalo/alerts"]
-	},
-	aqvaio : {
-		"Fiware-Service" : "aqvaio",
-		"Fiware-ServicePath" :
-			["/oulu"]
-	}
-};
-
-
-
 // For CURL widget tests
-var infoC = {
-	"Room 114" : {
-		Headers : {
-			"Fiware-ServicePath" : "/f/1/114",
-			"Fiware-Service" : "tal",
-		},
-		url: "pan0107.panoulu.net:8000/comet/STH/v1/contextEntities/type/AirQualityObserved/id/11122/attributes/tk11te22?aggrMethod=max&aggrPeriod=minute&dateFrom=2019-01-01T00:00&dateTo=2019-05-15T00:00",
-	},
-	"Room 116" : {
-		Headers : {
-			"Fiware-ServicePath" : "/f/1/116",
-			"Fiware-Service" : "tal",
-		},
-		url: "pan0107.panoulu.net:8000/comet/STH/v1/contextEntities/type/AirQualityObserved/id/11121/attributes/tk11te21?aggrMethod=max&aggrPeriod=minute&dateFrom=2019-01-01T00:00&dateTo=2019-05-15T00:00",
-	},
+// var infoC = {
+// 	"Room 114" : {
+// 		Headers : {
+// 			"Fiware-ServicePath" : "/f/1/114",
+// 			"Fiware-Service" : "tal",
+// 		},
+// 		url: "pan0107.panoulu.net:8000/comet/STH/v1/contextEntities/type/AirQualityObserved/id/11122/attributes/tk11te22?aggrMethod=max&aggrPeriod=minute&dateFrom=2019-01-01T00:00&dateTo=2019-05-15T00:00",
+// 	},
+// 	"Room 116" : {
+// 		Headers : {
+// 			"Fiware-ServicePath" : "/f/1/116",
+// 			"Fiware-Service" : "tal",
+// 		},
+// 		url: "pan0107.panoulu.net:8000/comet/STH/v1/contextEntities/type/AirQualityObserved/id/11121/attributes/tk11te21?aggrMethod=max&aggrPeriod=minute&dateFrom=2019-01-01T00:00&dateTo=2019-05-15T00:00",
+// 	},
+// };
+
+/* TODO:
+		 	  	- Testaa CSV Widget
+   Probleemia:  - Datoja yhdistettäessä, eroja mittausajoissa ei huomioida. Päivitetään aina viimeisimmän datan aikapisteet graafiin.
+              	  Luo ongelmia ainakin Talvikankaassa LastN-haulla, kun muutama huone on lopettanut datan tuottamisen tammikuussa ja muilla tulee edelleen.
+				- Siptronixilla napin painallukset jää näkyviin vaikka hakee uuden datapointin.
+*/
+
+var dateString = "?lastN=100";
+var GraphData = {
+	data: [],
+	categories: [],
+	titles: [[], []],
+	id: [],
 };
 
-// Create buttons for every data source on platform
-async function mainNew(object) {
-	//Mainfunction
-	// var url = "http://pan0107.panoulu.net:8000/orion/v2/entities?limit=300&options=count&orderBy=id";
-	// var lastN = "?lastN=100";
-	// document.body.innerHTML = '';
-	var tab = document.getElementsByClassName("sourceContainer")[0];
-	var names = Object.keys(object);
-
-	for(var i = 0; i < names.length; i++) {
-		var mainBtn = createSourceButton(names[i], object);
-		console.log(object)
-		tab.appendChild(mainBtn);
-	}
-}
-
+// Creates the data source buttons and handles their functionality
 function createSourceButton(sourceName, object) {
 	var activated = false;
 	var tab = document.getElementsByClassName("roomContainer")[0];
 	var btn = document.createElement("BUTTON");
-	var rooms = Object.keys(object[sourceName]);
-
+	var rooms = Object.keys(object);
+	var btnList = [];
 	btn.innerHTML = sourceName;
 	btn.style.backgroundColor = "#EAEDED";
 
 	btn.onclick = function() {
+		// Create room buttons
 		if (!activated) {
-			for (var i = 0; i < rooms.length; i++) {
-				var roomBtn = createRoomButton(sourceName, rooms[i], object);
-				tab.appendChild(roomBtn);
+			tab.style.border = "1px ridge green";
+			for(var i = 0; i < rooms.length; i++) {
+				var roomBtn = createRoomButton(sourceName, rooms[i], object[rooms[i]]);
+				btnList.push(roomBtn);
 			}
-			btn.style.backgroundColor = "MediumSeaGreen";
+
+			// Draw buttons
+			for (var i=0; i < btnList.length; i++) {
+				tab.appendChild(btnList[i])
+			}
+			btn.style.backgroundColor = "#acb9b9";
+			tab.style.border = "1px ridge green";
 			activated = true;
 		} else {
-			console.log("Kaydaaks");
-			tab.innerHTML = '';
+			// Close the data source aka close room buttons
+			for (var i=0; i < btnList.length; i++) {
+				tab.removeChild(btnList[i])
+				document.getElementsByClassName("deviceContainer")[0].innerHTML = "";
+				document.getElementsByClassName("deviceContainer")[0].style.border = "";
+			}
+			if (!tab.innerHTML) {
+				tab.style.border = "";
+				btn.style.backgroundColor = "#EAEDED";
+			} else {
+				tab.style.border = "1px ridge green";
+				btn.style.backgroundColor = "#EAEDED";
+			}
+			// Clear Highcharts widget when "closing the data source"
+			btnList = [];
 			activated = false;
-			btn.style.backgroundColor = "#EAEDED";
+			GraphData.data = [];
+			GraphData.titles = [[], []];
+			GraphData.categories = [];
+			GraphData.id = [];
+			sendGraph()
 		}
 	}
 	return btn;
 }
 
+// Creates room / alert buttons and handles their functionality
 function createRoomButton(sourceName, roomName, object) {
 	var activated = false;
 	var btn = document.createElement("BUTTON");
-	var tab = document.getElementsByClassName("tabcontent")[0];
-	var rooms = Object.keys(object[sourceName][roomName].id);
+	var tab = document.getElementsByClassName("deviceContainer")[0];
+	var rooms = Object.keys(object.id);
+	var btnList = [];
 	btn.innerHTML = roomName;
-	btn.style.backgroundColor = "#EAEDED";
-
-	btn.onclick = function() {
+	btn.style.backgroundColor = "#4CAF50";
+	btn.style.color = "white";
+	btn.onclick = async function() {
+		// Create data buttons
 		if (!activated) {
-			for (var i = 0; i < rooms.length; i++) {
-				var dataButton = createDataButton(sourceName, roomName, rooms[i], object);
-				tab.appendChild(dataButton);
+
+			// Handling dataset with alerts
+			if (object.AutomatedTime) {
+				var headers = await getHeader(object["Fiware-AlertServicePath"], object["Fiware-Service"]);
+				// Orionille toimiii SSL, cometilla ei tällä hetkellä
+				var response = await browser("https://pan0107.panoulu.net/orion/v2/entities?limit=300&options=count&orderBy=id", headers);
+				console.log(response);
+				var names = Object.keys(response[0].data.value);
+				console.log(names);
+				var valueList = [];
+				// Creates valueList
+				// Checks if value is integer
+				for(var i = 0; i < names.length; i++) {
+					var b = response[i].data.value[names[i]];
+					if((typeof(b) == "number") || (typeof(b) == "float")) {
+						valueList.push({name: names[i], data: []});
+					}
+				}
+				// Draws alerts on Highcharts widget
+				for (var i=0; i < response.length; i++) {
+					var dataButton = createDataButton(sourceName, roomName, rooms[0], object, response[i].id);
+					btnList.push(dataButton);
+					for(var j = 0; j < valueList.length; j++) {
+						valueList[j].data.push(response[i].data.value[valueList[j].name]);
+					}
+					GraphData.categories.push(new Date(response[i].dateIssued.value).toLocaleString() + " - " + response[i].data.value[names[2]]);
+				}
+				GraphData.titles[0] = roomName;
+				GraphData.titles[1].push("Light bulb status on each alert");
+				GraphData.data.push(valueList);
+				sendGraph()
+			// Other datasets
+			} else {
+				for (var i = 0; i < rooms.length; i++) {
+					var dataButton = createDataButton(sourceName, roomName, rooms[i], object, "");
+					btnList.push(dataButton);
+				}
 			}
-			btn.style.backgroundColor = "MediumSeaGreen";
-			activated = true;
+		activated = true;
+
+		// Buttons are drawn here
+		for (var i=0; i < btnList.length; i++) {
+			tab.appendChild(btnList[i])
+		}
+		tab.style.border = "1px ridge blue";
+		btn.style.backgroundColor = "#2f6a31";
+
+		// Buttons are closed here
 		} else {
-			console.log("Kaydaaks");
-			tab.innerHTML = '';
-			btn.style.backgroundColor = "#EAEDED";
+			// Since this createRoom() always creates single set of buttons,
+			// all buttons on the list can be deleted
+			for (var i=0; i < btnList.length; i++) {
+				tab.removeChild(btnList[i])
+			}
+			if (!tab.innerHTML) {
+				tab.style.border = "";
+				btn.style.backgroundColor = "#4CAF50";
+			} else {
+				tab.style.border = "1px ridge blue";
+				btn.style.backgroundColor = "#4CAF50";
+			}
+			btnList = [];
+			activated = false;
+
+			var buttons = Object.keys(object.id);
+
+			// Delete all graphs listed under the room
+			for (var j=0; j<buttons.length; j++) {
+				var index = GraphData.id.indexOf(buttons[j]);
+				if (index > -1) {
+					GraphData.id.splice(index, 1);
+					GraphData.titles[1].splice(index, 1);
+					GraphData.data.splice(index, 1);
+				}
+			}
+			// Update graph
+			sendGraph()
+		}
+	}
+	return btn;
+}
+
+/* Removed alertButton, place old alertButton same place to deviceName */
+function createDataButton(sourceName, roomName, deviceName, object, alertButton) {
+	var activated = false;
+	var btn = document.createElement("BUTTON");
+	if (object.AutomatedTime) {
+		btn.innerHTML = alertButton;
+	} else {
+		btn.innerHTML = roomName + ": " + deviceName;
+	}
+	btn.style.backgroundColor = "#008CBA";
+	btn.style.color = "white";
+	btn.style["margin-bottom"] = "1px";
+
+	// Request data from server
+	btn.onclick = async function() {
+		// Fetch data from Comet and draw it on Highcharts widget
+		if (!activated) {
+			var attribute = Object.keys(object.id[deviceName].attributes);
+			var valueList = [];
+
+			for (var a=0; a < attribute.length; a++) {
+				var type = object.id[deviceName].attributes[attribute[a]].type;
+				var description = object.id[deviceName].attributes[attribute[a]].description;
+				var unit = object.id[deviceName].attributes[attribute[a]].unit;
+
+				// Create Url's
+					// Specific url for alert based data source
+				if (object.AutomatedTime) {
+					var minutes = '20';
+					var alertDate = new Date(alertButton.slice(31));
+					var titles = [roomName, minutes + " minutes around " + alertDate];
+					var alertFrom = alertDate.setMinutes(alertDate.getMinutes() - parseInt(minutes));
+					var alertTo = alertDate.setMinutes(alertDate.getMinutes() + 2 * parseInt(minutes));
+					var cometUrl = "https://cors-anywhere.herokuapp.com/pan0107.panoulu.net:8000/comet/STH/v1/contextEntities";
+						cometUrl += "/type/" + type + "/id/" + deviceName;
+						cometUrl += "/attributes/" + attribute[a] + "?lastN=100";
+						cometUrl += "&dateFrom=" + alertFrom + "&dateTo=" + alertTo;
+					GraphData.data = [];
+					GraphData.categories = [];
+					GraphData.titles[1] = [];
+					GraphData.id = [];
+					sendGraph()
+					GraphData.titles[0] = roomName + " - " + deviceName;
+					GraphData.titles[1].push(minutes + " minutes around " + alertButton);
+				}
+				// General url for other data sources
+				else {
+					var cometUrl = "https://cors-anywhere.herokuapp.com/pan0107.panoulu.net:8000/comet/STH/v1/contextEntities";
+						cometUrl += "/type/" + type + "/id/" + deviceName;
+						cometUrl += "/attributes/" + attribute[a] + dateString;
+				}
+
+				// Fetch data
+				var servicePath = object["Fiware-ServicePath"];
+				var service = object["Fiware-Service"];
+				var headers = await getHeader(servicePath, service);
+				var response = await browser(cometUrl, headers);
+				var values = response.contextResponses[0].contextElement.attributes[0].values;
+				valueList.push({
+					name: description + ` (${object.id[deviceName].attributes[attribute[a]].unit}) ` + deviceName,
+					data: []
+				})
+
+				// Clear the categories(time stamps) in order to use the most recent time stamps for the graph
+				GraphData.categories = [];
+				// LastN search
+				console.log(dateString)
+				console.log(values)
+				if (dateString.slice(1,6) === "lastN" || object.AutomatedTime) {
+					for (var i=0; i < values.length; i++) {
+						// Handle data with 3PhaseMeasurements
+						if (typeof values[i].attrValue === "object") {
+							var valueL1 = values[i].attrValue.L1;
+							var valueL2 = values[i].attrValue.L2;
+							var valueL3 = values[i].attrValue.L3;
+							var avgValue = (valueL1 + valueL2 + valueL3) / 3;
+							valueList[a].data.push(parseFloat(parseFloat(avgValue).toFixed(1)));
+							GraphData.categories.push(new Date(values[i].recvTime.toLocaleString()));
+						// Single value data
+						} else {
+							valueList[a].data.push(parseFloat(parseFloat(values[i].attrValue).toFixed(1)));
+							GraphData.categories.push(new Date(values[i].recvTime).toLocaleString());
+						}
+					}
+				// Timeperiod search
+				} else {
+					for (var i=0; i < values.length; i++) {
+						for (var j=0; j < values[i].points.length; j++) {
+							var date = new Date(values[i]._id.origin);
+							// If value is undefined push null so that highcharts can still draw graph
+							if (!values[i].points[j].max) {
+								valueList[a].data.push(null);
+							} else {
+								valueList[a].data.push(values[i].points[j].max);
+							}
+							if (cometUrl.search("minute") > 0) {
+								date.setMinutes(date.getMinutes() + values[i].points[j].offset);
+							} else if (cometUrl.search("hour") > 0) {
+								date.setHours(date.getHours() + values[i].points[j].offset);
+							} else if (cometUrl.search("day") > 0) {
+								date.setDate(date.getDate() + values[i].points[j].offset);
+							} else if (cometUrl.search("month") > 0) {
+								date.setMonth(date.getMonth() + values[i].points[j].offset);
+							}
+							GraphData.categories.push(new Date(date).toLocaleString());
+						}
+					}
+				}
+				// Send Curl everytime data is requested from Comet
+				sendCurl(cometUrl, headers)
+				// Send data to CSV Widget
+				// sendCSV(categories, valueList);
+			}
+
+			GraphData.titles[0] = sourceName;
+			GraphData.titles[1].push(roomName);
+			GraphData.data.push(valueList)
+			// Different button id's for alert based data sources
+			console.log(object)
+			if (object.AutomatedTime) {
+				console.log("jeeeee")
+				GraphData.id.push(alertButton)
+			} else {
+				GraphData.id.push(deviceName)
+			}
+			// If data is not found send info through Highcharts widget
+			if (values.length === 0) {
+				sendGraph("Not found")
+			} else {
+				sendGraph()
+			}
+			btn.style.backgroundColor = "#006080";
+			activated = true;
+		// If button is pressed again, delete graphs from Highcharts widget
+		} else {
+		// Find the correct data source and delete the exact data from Highcharts widget
+			// Different button id's for alert based data sources
+			if (object.AutomatedTime) {
+				console.log("jeeeee23232")
+				var index = GraphData.id.indexOf(alertButton);
+			} else {
+				var index = GraphData.id.indexOf(deviceName);
+			}
+			if (index > -1) {
+				GraphData.id.splice(index, 1);
+				GraphData.titles[1].splice(index, 1);
+				GraphData.data.splice(index, 1);
+			}
+			btn.style.backgroundColor = "#008CBA";
+			sendGraph()
 			activated = false;
 		}
 	}
 	return btn;
 }
 
-function createDataButton(sourceName, roomName, deviceName, object) {
-	var btn = document.createElement("BUTTON");
-
-	btn.innerHTML = deviceName;
-	btn.style.backgroundColor = "#EAEDED";
-
-	// Request data from server
-	btn.onclick = async function() {
-		console.log("dataaaaa"+ deviceName)
-		var attribute = Object.keys(object[sourceName][roomName].id[deviceName].attributes);
-		var type = object[sourceName][roomName].id[deviceName].attributes[attribute].type;
-		var cometUrl = "https://cors-anywhere.herokuapp.com/pan0107.panoulu.net:8000/comet/STH/v1/contextEntities";
-		cometUrl = cometUrl + "/type/" + type + "/id/" + deviceName;
-		cometUrl = cometUrl + "/attributes/" + attribute + "?lastN=50";
-		console.log(cometUrl)
-
-		var servicePath = object[sourceName][roomName]["Fiware-ServicePath"];
-		var service = object[sourceName][roomName]["Fiware-Service"];
-
-		console.log("Haetaan dataa")
-		var headers = await getHeader(servicePath, service);
-		var response = await browser(cometUrl, headers);
-		console.log("Data haettu:")
-
-		console.log(response)
-	}
-
-	return btn;
-}
-
-function sendGraph(values, titles, update) {
+function sendGraph(notFound) {
 	// Function gets tempList and name outputs graph to Highcharts
 	// Connect Graph to Highcharts Options in wiring mode.
+	var dataList = [];
 
-	// valueList contains list of lists where [0] = data values,
-	// [1] = xAxis label
-	// [2] = name of the value
-	var compValueList = [];
+	if (notFound) {
+		MashupPlatform.wiring.pushEvent("Graph", {
+	        titles: ["Data not found, try other search parameters."],
+	        categories: [],
+	        data: [],
+	    });
+	} else {
+		for (var i=0; i < GraphData.data.length; i++) {
+			for (var j=0; j < GraphData.data[i].length; j++) {
+				dataList.push(GraphData.data[i][j])
+			}
+		}
 
-    console.log(values)
-
-	for (var i = 0; i < values.length; i++) {
-        for (var j = 0; j < values[i].length; j++) {
-            compValueList.push({
-        		name : values[i][j][2],
-        		data : values[i][j][0],
-    		});
-        }
+		MashupPlatform.wiring.pushEvent("Graph", {
+	        titles: GraphData.titles,
+	        categories: GraphData.categories,
+	        data: dataList,
+	    });
 	}
-    console.log(compValueList)
-
-	MashupPlatform.wiring.pushEvent("Graph", {
-        titles: titles,
-        categories: values[0][0][1],
-        data: compValueList,
-        update: update,
-    });
 }
 
-//Tests Curl widget
-function sendCurl(info) {
+// Sends Curl to Curl Widget
+function sendCurl(url, headers) {
+	var info = {
+		headers : headers,
+		url: url,
+	}
 	MashupPlatform.wiring.pushEvent("sendCurl", info);
 }
 
-function browser(searchUrl, searchHeaders) {
+// NEEDS TESTING
+function sendCSV(dates, values) {
 
+	var context = {
+		dates,
+		values,
+	};
+	console.log(context);
+	MashupPlatform.wiring.pushEvent("sendCSV", context);
+}
+
+function browser(searchUrl, searchHeaders) {
 	// Sends all the requests based on URL and headers, returns JSON
 	return new Promise(resolve => {
 		setTimeout(() => {
-
-			console.log(searchUrl);
-			console.log(searchHeaders);
 			var cList = [];
 			MashupPlatform.http.makeRequest(searchUrl,{
 			method: 'GET',
 			contentType: 'application/json',
 			requestHeaders: searchHeaders,
 			onSuccess: async function (response) {
-
 				var jsonData = JSON.parse(response.responseText);
 				// takes keys of the site, these keys can be used to find correct data
 				var keys = Object.keys(jsonData);
 				resolve(jsonData);
-
 			},
 			on404: function (response) {
 				MashupPlatform.widget.log("Error 404: Not Found");
@@ -252,7 +417,6 @@ function browser(searchUrl, searchHeaders) {
 			});
 		}, 50);
 	});
-
 }
 
 function getHeader(servicePath, service) {
@@ -262,794 +426,40 @@ function getHeader(servicePath, service) {
 		setTimeout(() => {
 			var header = {
 			// "Platform-ApiKey": MashupPlatform.prefs.get('apiKey'),
-			"Platform-Apikey": "pfzGgAJEB0qxPPzk0LTVJstcAfZv3YmN",
 			"Accept": "application/json",
 			"Fiware-Service": service,
 			"Fiware-ServicePath": servicePath,
+			"Platform-ApiKey": "pfzGgAJEB0qxPPzk0LTVJstcAfZv3YmN",
 			};
 			resolve(header);
 		}, 50);
 	});
 }
 
-function createMainButton(name) {
+// Create buttons for every data source on platform
+async function mainNew(object) {
+	// Mainfunction
+	// var url = "http://pan0107.panoulu.net:8000/orion/v2/entities?limit=300&options=count&orderBy=id";
+	// var lastN = "?lastN=100";
+	var tab = document.getElementsByClassName("sourceContainer")[0];
+	var names = Object.keys(object);
 
-	var activated = false;
-
-	var url = "http://pan0107.panoulu.net:8000/orion/v2/entities?limit=300&options=count&orderBy=id";
-
-	var tab = document.getElementsByClassName("tabcontent")[0];
-
-	var btn = document.createElement("BUTTON");
-	btn.innerHTML = name;
-	btn.onclick = async function () {
-		// Makes init search
-		if(!activated) {
-			for(var i = 0; i < servicePaths.length; i++) {
-				var servicePath = servicePaths[i];
-				var headers = await getHeader(servicePath, service);
-				var response = await browser(url, headers);
-				console.log(response)
-				if (service === "aqvaio") {
-					console.log("---------------asdasdasd")
-				}
-					// ----------------------------
-					for(var j = 0; j < response.length; j++) {
-						var namesResponse = Object.keys(response[j]);
-						for(var g = 0; g < namesResponse.length; g++) {
-							var k = namesResponse[g];
-							if(k !== 'type' && k !== 'common_name' && k !== "location" && k !== "id" && k !== "TimeInstant" &&
-								k !== 'area' && k !== 'capacity') {
-								var cometUrl = "https://cors-anywhere.herokuapp.com/pan0107.panoulu.net:8000/comet/STH/v1/contextEntities";
-								cometUrl = cometUrl + "/type/" + response[j]["type"] + "/id/" + response[j]["id"];
-								cometUrl = cometUrl + "/attributes/" + namesResponse[g] + "?lastN=50";
-
-								var name = response[j]["type"] + " " + response[j]["id"] + " " + namesResponse[g];
-								// console.log(name)
-								// console.log(headers)
-								// console.log(cometUrl)
-								var subBtn = createSubButton(name, headers, cometUrl);
-								console.log(subBtn)
-								tab.appendChild(subBtn);
-							}
-						}
-					}
-					// ----------------------------
-			}
-			activated = true;
-		}
-		else {
-			console.log("Kaydaaks");
-			tab.innerHTML = '';
-			activated = false;
-		}
+	for(var i = 0; i < names.length; i++) {
+		var mainBtn = createSourceButton(names[i], object[names[i]]);
+		tab.appendChild(mainBtn);
 	}
-	return btn;
+	MashupPlatform.wiring.registerCallback('recSearchInfo', function(string) {dateString=string; console.log("dates: "+ string)});
 }
 
-function createSubButton(name, headers, url) {
-
-
-	var btn = document.createElement("BUTTON") ;
-	btn.innerHTML = name;
-	btn.onclick = async function () {
-		var response = await browser(url, headers);
-		console.log(response);
-	}
-	return btn;
+function waitingScreen() {
+	// TO-DO: Waiting screen
+	// document.body.innerHTML = '';
+	// document.body.innerHTML = 'WAITING FOR INPUT OBJECT';
+	// console.log("WAITING");
+	// if (document.body.innerHTML) {
+	// 	console.log("DONE")
+	// }
 }
 
-function createOptionsButtons() {
-	// TO-DO : Create optons lastN, aggrMethord etc..
-	// use document.getElementsByClassNAme("options")[0] to store created buttons
-}
-
-// dataObject - Will be seperate widget later
-var dataObject = {
-	Aqvaio : {
-		"Ritaharju sportcenter" : {
-			"Fiware-ServicePath" : "/oulu",
-			"Fiware-Service" : "aqvaio",
-			"id" : {
-				"AirQualityObserved:0004815870800252" : {
-					"attributes" : {
-						"temperature" : {
-							"type" : "AirQualityObserved",
-							"description" : "temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-				"Device:0004815870800252" : {
-					"attributes" : {
-						"value" : {
-							"type" : "Device",
-							"description" : "water reading",
-							"unitCode" : "MTQ"
-						},
-					},
-				},
-			},
-		},
-		"Environment house" : {
-			"Fiware-ServicePath" : "/oulu",
-			"Fiware-Service": "aqvaio",
-			"id" : {
-				"AirQualityObserved:0010588167080077" : {
-					"attributes" : {
-						"temperature" : {
-							"type" : "AirQualityObserved",
-							"description" : "temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-				"Device:0010588167080077" : {
-					"attributes" : {
-						"value" : {
-							"type" : "Device",
-							"description" : "water reading",
-							"unitCode" : "MTQ"
-						},
-					},
-				},
-			},
-		},
-		"Pikku-Iikka daycare center" : {
-			"Fiware-ServicePath" : "/oulu",
-			"Fiware-Service" : "aqvaio",
-			"id" : {
-				"AirQualityObserved:0010588195080042" : {
-					"attributes" : {
-						"temperature" : {
-							"type" : "AirQualityObserved",
-							"description" : "temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-				"Device:0010588195080042" : {
-					"attributes" : {
-						"value" : {
-							"type" : "Device",
-							"description" : "water reading",
-							"unitCode" : "MTQ"
-						},
-					},
-				},
-			},
-		},
-	},
-
-	Siptronix : {
-		"Siptronix" : {
-			"Fiware-ServicePath" : "/oulu",
-			"Fiware-Service" : "siptronix",
-			"id" : {
-				"Ritaharju_POS39_lighting" : {
-					"attributes" : {
-						"activePower" : {
-							"type" : "3PhaseACMeasurement",
-							"description" : "Active power",
-							"unitCode" : " ",
-						},
-						"apparentPower" : {
-							"type" : "3PhaseACMeasurement",
-							"description" : "Apparent power",
-							"unitCode" : " ",
-						},
-						"current" : {
-							"type" : "3PhaseACMeasurement",
-							"description" : "Current",
-							"unitCode" : " ",
-						},
-						"frequency" : {
-							"type" : "3PhaseACMeasurement",
-							"description" : "Frequency",
-							"unitCode" : " ",
-						},
-						"powerFactor" : {
-							"type" : "3PhaseACMeasurement",
-							"description" : "Powerfactor",
-							"unitCode" : " ",
-						},
-						"reactivePower" : {
-							"type" : "3PhaseACMeasurement",
-							"description" : "Reactive power",
-							"unitCode" : " ",
-						},
-						"totalActiveEnergyImport" : {
-							"type" : "3PhaseACMeasurement",
-							"description" : "Total active energy import",
-							"unitCode" : " ",
-						},
-						"totalActivePower" : {
-							"type" : "3PhaseACMeasurement",
-							"description" : "Total active power",
-							"unitCode" : " ",
-						},
-						"totalApparentPower" : {
-							"type" : "3PhaseACMeasurement",
-							"description" : "Total apparent power",
-							"unitCode" : " ",
-						},
-						"totalReactivePower" : {
-							"type" : "3PhaseACMeasurement",
-							"description" : "Total reactive power",
-							"unitCode" : " ",
-						},
-						"voltage" : {
-							"type" : "3PhaseACMeasurement",
-							"description" : "Voltage",
-							"unitCode" : " ",
-						},
-					},
-				},
-			},
-		},
-	},
-
-	Talvikangas : {
-		"Room 114" : {
-			"Fiware-ServicePath" : "/f/1/114",
-			"Fiware-Service" : "tal",
-			"id" : {
-				"11122" : {
-					"attributes" : {
-						"tk11te22" : {
-						"type" : "AirQualityObserved",
-						"description" : "Temperature",
-						"unitCode" : "CEL",
-						},
-					},
-				},
-			},
-			"capacity" : "20",
-			"location" : "NA",
-		},
-		"Room 116" : {
-			"Fiware-ServicePath" : "/f/1/116",
-			"Fiware-Service" : "tal",
-			"id" : {
-				"11121" : {
-					"attributes" : {
-						"tk11te21" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-			},
-			"capacity" : "NA",
-			"location" : "NA",
-		},
-		"Room 118" : {
-			"Fiware-ServicePath" : "/f/1/118",
-			"Fiware-Service" : "tal",
-			"id" : {
-				"11120" : {
-					"attributes" : {
-						"tk11te20" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-			},
-			"capacity" : "NA",
-			"location" : "NA",
-		},
-	    "Room 161" : {
-			"Fiware-ServicePath" : "/f/1/161",
-			"Fiware-Service" : "tal",
-			"id" : {
-				"10822" : {
-					"attributes" : {
-						"tk08qe22" : {
-							"type" : "AirQualityObserved",
-							"description" : "Carbon dioxide",
-							"unitCode" : "59",
-						},
-						"tk08te22" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-			},
-			"capacity" : "NA",
-			"location" : "NA",
-		},
-		"Room 190" : {
-			"Fiware-ServicePath" : "/f/1/190",
-			"Fiware-Service" : "tal",
-			"id" : {
-				"1621" : {
-					"attributes" : {
-						"lks6te21" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-						"tk04qe20" : {
-							"type" : "AirQualityObserved",
-							"description" : "Carbon Dioxide",
-							"unitCode" : "59",
-						},
-					},
-				},
-				"1622" : {
-					"attributes" : {
-						"lks6te22" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-				"1623" : {
-					"attributes" : {
-						"lks6te23" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-						"tk04qe24" : {
-							"type" : "AirQualityObserved",
-							"description" : "Carbon Dioxide",
-							"unitCode" : "59",
-						},
-					},
-				},
-				"1624" : {
-					"attributes" : {
-						"lks6te24" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-				"1625" : {
-					"attributes" : {
-						"lks6te25" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-						"tk04qe22" : {
-							"type" : "AirQualityObserved",
-							"description" : "Carbon Dioxide",
-							"unitCode" : "59",
-						},
-					},
-				},
-				"1626" : {
-					"attributes" : {
-						"lks6te26" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-			},
-		},
-		"Room 202" : {
-			"Fiware-ServicePath" : "/f/2/202",
-			"Fiware-Service" : "tal",
-			"id" : {
-				"k2s0322" : {
-					"attributes" : {
-						"tk03_qe22" : {
-							"type" : "AirQualityObserved",
-							"description" : "Carbon dioxide",
-							"unitCode" : "59",
-						},
-						"tk03_te22" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-				"k2s0323" : {
-					"attributes" : {
-						"tk03_qe23" : {
-							"type" : "AirQualityObserved",
-							"description" : "Carbon dioxide",
-							"unitCode" : "59",
-						},
-						"tk03_te23" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-				"rio202" : {
-					"attributes" : {
-						"rio202_c" : {
-							"type" : "AirQualityObserved",
-							"description" : "Carbon dioxide",
-							"unitCode" : "59",
-						},
-						"rio202_h" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-						"rio202_t" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-						"rio202_v" : {
-							"type" : "AirQualityObserved",
-							"description" : "Volatile organic compound",
-							"unitCode" : "61",
-						},
-					},
-				},
-				"rio202m" : {
-					"attributes" : {
-						"rio202m_m" : {
-							"type" : "AirQualityObserved",
-							"description" : "Number of people",
-							"unitCode" : " ",
-						},
-					},
-				},
-			},
-		},
-	    "Room 205" : {
-			"Fiware-ServicePath" : "/f/2/205",
-			"Fiware-Service" : "tal",
-			"id" : {
-				"rio205" : {
-					"attributes" : {
-						"rio205_c" : {
-							"type" : "AirQualityObserved",
-							"description" : "Carbon dioxide",
-							"unitCode" : "59",
-						},
-						"rio205_h" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-	                    "rio205_t" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-	                    "rio205_v" : {
-							"type" : "AirQualityObserved",
-							"description" : "Volatile organic compound",
-							"unitCode" : "61",
-						},
-					},
-				},
-	            "rio205m" : {
-					"attributes" : {
-						"rio205m_m" : {
-							"type" : "AirQualityObserved",
-							"description" : "Number of people",
-							"unitCode" : " ",
-						},
-					},
-				},
-	        },
-	    },
-	    "Room 225" : {
-			"Fiware-ServicePath" : "/f/2/225",
-			"Fiware-Service" : "tal",
-			"id" : {
-				"rio225" : {
-					"attributes" : {
-						"rio225_c" : {
-							"type" : "AirQualityObserved",
-							"description" : "Carbon dioxide",
-							"unitCode" : "59",
-						},
-						"rio225_h" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-	                    "rio225_t" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-	                    "rio225_v" : {
-							"type" : "AirQualityObserved",
-							"description" : "Volatile organic compound",
-							"unitCode" : "61",
-						},
-					},
-				},
-	        },
-	    },
-	    "Room 226" : {
-			"Fiware-ServicePath" : "/f/2/226",
-			"Fiware-Service" : "tal",
-			"id" : {
-				"rio226" : {
-					"attributes" : {
-						"rio226_c" : {
-							"type" : "AirQualityObserved",
-							"description" : "Carbon dioxide",
-							"unitCode" : "59",
-						},
-						"rio226_h" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-	                    "rio226_t" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-	                    "rio226_v" : {
-							"type" : "AirQualityObserved",
-							"description" : "Volatile organic compound",
-							"unitCode" : "61",
-						},
-					},
-				},
-	        },
-	    },
-	    "Room 227" : {
-			"Fiware-ServicePath" : "/f/2/227",
-			"Fiware-Service" : "tal",
-			"id" : {
-				"rio227" : {
-					"attributes" : {
-						"rio227_c" : {
-							"type" : "AirQualityObserved",
-							"description" : "Carbon dioxide",
-							"unitCode" : "59",
-						},
-						"rio227_h" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-	                    "rio227_t" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-	                    "rio227_v" : {
-							"type" : "AirQualityObserved",
-							"description" : "Volatile organic compound",
-							"unitCode" : "61",
-						},
-					},
-				},
-	        },
-	    },
-	    "Room 228" : {
-			"Fiware-ServicePath" : "/f/2/228",
-			"Fiware-Service" : "tal",
-			"id" : {
-				"rio228" : {
-					"attributes" : {
-						"rio228_c" : {
-							"type" : "AirQualityObserved",
-							"description" : "Carbon dioxide",
-							"unitCode" : "59",
-						},
-						"rio228_h" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-	                    "rio228_t" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-	                    "rio228_v" : {
-							"type" : "AirQualityObserved",
-							"description" : "Volatile organic compound",
-							"unitCode" : "61",
-						},
-					},
-				},
-	        },
-	    },
-	    "Room 229" : {
-			"Fiware-ServicePath" : "/f/2/229",
-			"Fiware-Service" : "tal",
-			"id" : {
-				"rio229" : {
-					"attributes" : {
-						"rio229_c" : {
-							"type" : "AirQualityObserved",
-							"description" : "Carbon dioxide",
-							"unitCode" : "59",
-						},
-						"rio229_h" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-	                    "rio229_t" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-	                    "rio229_v" : {
-							"type" : "AirQualityObserved",
-							"description" : "Volatile organic compound",
-							"unitCode" : "61",
-						},
-					},
-				},
-	        },
-	    },
-	    "Room 230" : {
-			"Fiware-ServicePath" : "/f/2/230",
-			"Fiware-Service" : "tal",
-			"id" : {
-				"rio230" : {
-					"attributes" : {
-						"rio230_c" : {
-							"type" : "AirQualityObserved",
-							"description" : "Carbon dioxide",
-							"unitCode" : "59",
-						},
-						"rio230_h" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-	                    "rio230_t" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-	                    "rio230_v" : {
-							"type" : "AirQualityObserved",
-							"description" : "Volatile organic compound",
-							"unitCode" : "61",
-						},
-					},
-				},
-	        },
-	    },
-	    "Room 231" : {
-			"Fiware-ServicePath" : "/f/2/231",
-			"Fiware-Service" : "tal",
-			"id" : {
-				"rio231" : {
-					"attributes" : {
-						"rio231_c" : {
-							"type" : "AirQualityObserved",
-							"description" : "Carbon dioxide",
-							"unitCode" : "59",
-						},
-						"rio231_h" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-	                    "rio231_t" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-	                    "rio231_v" : {
-							"type" : "AirQualityObserved",
-							"description" : "Volatile organic compound",
-							"unitCode" : "61",
-						},
-					},
-				},
-	        },
-	    },
-	    "Room 232" : {
-			"Fiware-ServicePath" : "/f/2/232",
-			"Fiware-Service" : "tal",
-			"id" : {
-				"rio232" : {
-					"attributes" : {
-						"rio232_c" : {
-							"type" : "AirQualityObserved",
-							"description" : "Carbon dioxide",
-							"unitCode" : "59",
-						},
-						"rio232_h" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-	                    "rio232_t" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-	                    "rio232_v" : {
-							"type" : "AirQualityObserved",
-							"description" : "Volatile organic compound",
-							"unitCode" : "61",
-						},
-					},
-				},
-	        },
-	    },
-	    "Room 233" : {
-			"Fiware-ServicePath" : "/f/2/233",
-			"Fiware-Service" : "tal",
-			"id" : {
-				"rio233" : {
-					"attributes" : {
-						"rio233_c" : {
-							"type" : "AirQualityObserved",
-							"description" : "Carbon dioxide",
-							"unitCode" : "59",
-						},
-						"rio233_h" : {
-							"type" : "AirQualityObserved",
-							"description" : "Relative humidity",
-							"unitCode" : "P1",
-						},
-	                    "rio233_t" : {
-							"type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-	                    "rio233_v" : {
-							"type" : "AirQualityObserved",
-							"description" : "Volatile organic compound",
-							"unitCode" : "61",
-						},
-					},
-				},
-	        },
-	    },
-	    "Room 302" : {
-			"Fiware-ServicePath" : "/f/3/302",
-			"Fiware-Service" : "tal",
-			"id" : {
-				"30320" : {
-					"attributes" : {
-						"tk03qe20" : {
-							"type" : "AirQualityObserved",
-							"description" : "Carbon dioxide",
-							"unitCode" : "59",
-						},
-						"tk03te20" : {
-	                        "type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-	            "30321" : {
-					"attributes" : {
-						"tk03qe21" : {
-							"type" : "AirQualityObserved",
-							"description" : "Carbon dioxide",
-							"unitCode" : "59",
-						},
-						"tk03te21" : {
-	                        "type" : "AirQualityObserved",
-							"description" : "Temperature",
-							"unitCode" : "CEL",
-						},
-					},
-				},
-	        },
-	    },
-	}
-}
-
-// TO-DO: main gets initialized by another widget sending infoOld type object to it.
-mainNew(dataObject);
+waitingScreen();
+MashupPlatform.wiring.registerCallback('recStartObject', function(content) {mainNew(content)});
