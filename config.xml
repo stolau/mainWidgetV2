@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="aui" name="mainWidgetV2" version="0.2.0">
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="aui" name="mainWidgetV2" version="0.2.1">
     <details>
         <title>mainWidgetV2</title>
         <homepage>https://github.com/wirecloud-fiware/quick-start-development-tutorial</homepage>
@@ -13,6 +13,9 @@
         <licenseurl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseurl>
         <doc>doc/developer-guide.md</doc>
     </details>
+    <requirements>
+        <feature name="NGSI"/>
+    </requirements>
     <contents src="index.html" useplatformstyle="true"/>
 	<rendering width="240" height="50%"/>
 

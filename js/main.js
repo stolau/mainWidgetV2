@@ -19,10 +19,11 @@
 // };
 
 /* TODO:
-		 	  	- Testaa CSV Widget
+
    Probleemia:  - Datoja yhdistettäessä, eroja mittausajoissa ei huomioida. Päivitetään aina viimeisimmän datan aikapisteet graafiin.
               	  Luo ongelmia ainakin Talvikankaassa LastN-haulla, kun muutama huone on lopettanut datan tuottamisen tammikuussa ja muilla tulee edelleen.
 				- Siptronixilla napin painallukset jää näkyviin vaikka hakee uuden datapointin.
+				- cors-anywhere.herokuapp.com/ ei toimi curlissa
 */
 
 var dateString = "?lastN=100";
@@ -118,6 +119,7 @@ function createRoomButton(sourceName, roomName, object) {
 					}
 				}
 				// Draws alerts on Highcharts widget
+				console.log(response[i].id)
 				for (var i=0; i < response.length; i++) {
 					var dataButton = createDataButton(sourceName, roomName, rooms[0], object, response[i].id);
 					btnList.push(dataButton);
@@ -247,7 +249,6 @@ function createDataButton(sourceName, roomName, deviceName, object, alertButton)
 				// Clear the categories(time stamps) in order to use the most recent time stamps for the graph
 				GraphData.categories = [];
 				// LastN search
-				console.log(dateString)
 				console.log(values)
 				if (dateString.slice(1,6) === "lastN" || object.AutomatedTime) {
 					for (var i=0; i < values.length; i++) {
@@ -291,17 +292,18 @@ function createDataButton(sourceName, roomName, deviceName, object, alertButton)
 				}
 				// Send Curl everytime data is requested from Comet
 				sendCurl(cometUrl, headers)
-				// Send data to CSV Widget
-				// sendCSV(categories, valueList);
 			}
 
 			GraphData.titles[0] = sourceName;
 			GraphData.titles[1].push(roomName);
 			GraphData.data.push(valueList)
+
+			// Send data to CSV Widget
+			sendCSV(GraphData.categories, GraphData.data);
+
 			// Different button id's for alert based data sources
 			console.log(object)
 			if (object.AutomatedTime) {
-				console.log("jeeeee")
 				GraphData.id.push(alertButton)
 			} else {
 				GraphData.id.push(deviceName)
@@ -319,7 +321,6 @@ function createDataButton(sourceName, roomName, deviceName, object, alertButton)
 		// Find the correct data source and delete the exact data from Highcharts widget
 			// Different button id's for alert based data sources
 			if (object.AutomatedTime) {
-				console.log("jeeeee23232")
 				var index = GraphData.id.indexOf(alertButton);
 			} else {
 				var index = GraphData.id.indexOf(deviceName);
@@ -372,7 +373,7 @@ function sendCurl(url, headers) {
 	MashupPlatform.wiring.pushEvent("sendCurl", info);
 }
 
-// NEEDS TESTING
+// Sends data object to CSV_Object
 function sendCSV(dates, values) {
 
 	var context = {
@@ -389,31 +390,32 @@ function browser(searchUrl, searchHeaders) {
 		setTimeout(() => {
 			var cList = [];
 			MashupPlatform.http.makeRequest(searchUrl,{
-			method: 'GET',
-			contentType: 'application/json',
-			requestHeaders: searchHeaders,
-			onSuccess: async function (response) {
-				var jsonData = JSON.parse(response.responseText);
-				// takes keys of the site, these keys can be used to find correct data
-				var keys = Object.keys(jsonData);
-				resolve(jsonData);
-			},
-			on404: function (response) {
-				MashupPlatform.widget.log("Error 404: Not Found");
-				return cList;
-			},
-			on401: function (response) {
-				MashupPlatform.widget.log("Error 401: Authentication failed");
-				return cList;
-			},
-			on403: function (response) {
-				MashupPlatform.widget.log("Error 403: Authorization failed");
-				return cList;
-			},
-			onFailure: function (response) {
-				MashupPlatform.widget.log("Unexpected response from the server");
-				return cList;
-			}
+				// NGSI.Connection(searchUrl, {
+				method: 'GET',
+				contentType: 'application/json',
+				requestHeaders: searchHeaders,
+				onSuccess: async function (response) {
+					var jsonData = JSON.parse(response.responseText);
+					// takes keys of the site, these keys can be used to find correct data
+					var keys = Object.keys(jsonData);
+					resolve(jsonData);
+				},
+				on404: function (response) {
+					MashupPlatform.widget.log("Error 404: Not Found");
+					return cList;
+				},
+				on401: function (response) {
+					MashupPlatform.widget.log("Error 401: Authentication failed");
+					return cList;
+				},
+				on403: function (response) {
+					MashupPlatform.widget.log("Error 403: Authorization failed");
+					return cList;
+				},
+				onFailure: function (response) {
+					MashupPlatform.widget.log("Unexpected response from the server");
+					return cList;
+				}
 			});
 		}, 50);
 	});
