@@ -13,9 +13,10 @@
         <licenseurl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseurl>
         <doc>doc/developer-guide.md</doc>
     </details>
+    <!-- Rikkoo Wirecloudin mashupin :D
     <requirements>
         <feature name="NGSI"/>
-    </requirements>
+    </requirements> -->
     <contents src="index.html" useplatformstyle="true"/>
 	<rendering width="240" height="50%"/>
 
