@@ -27,12 +27,36 @@
 */
 
 var dateString = "?lastN=100";
+/* Alternative solution to handle graphdata
+	categories contain complete set of time points
+	data is list of lists containing each displayble graph
+var GraphDataContainer = {
+	categories : []
+	data : []
+}	
+*/
+
 var GraphData = {
 	data: [],
 	categories: [],
 	titles: [[], []],
 	id: [],
 };
+
+/*
+// Function receives times and places them in order
+function validateTime(categories) {
+	new Date(values[i].recvTime).toLocaleString()
+	
+	var cat = GraphsDataContainer.categories;
+	for(var i = 0; i < cat.length; i++) {
+		if(categories[0] == cat[i]) {
+			// Proceeds to adding 
+		}
+	}
+}	
+*/
+
 
 // Creates the data source buttons and handles their functionality
 function createSourceButton(sourceName, object) {
@@ -299,6 +323,7 @@ function createDataButton(sourceName, roomName, deviceName, object, alertButton)
 			GraphData.data.push(valueList)
 
 			// Send data to CSV Widget
+			console.log(GraphData.categories);
 			sendCSV(GraphData.categories, GraphData.data);
 
 			// Different button id's for alert based data sources
