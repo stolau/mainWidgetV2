@@ -32,6 +32,8 @@ function createSourceButton(sourceName, object) {
 	var btn = document.createElement("BUTTON");
 	// var rooms = Object.keys(object[sourceName]);
 	var rooms = Object.keys(object);
+	
+	// Buttons created gets stores in to this list
 	var btnList = [];
 	btn.innerHTML = sourceName;
 	btn.style.backgroundColor = "#EAEDED";
