@@ -54,8 +54,8 @@ function validateTime(categories) {
 			// Proceeds to adding 
 		}
 	}
-}	
-*/
+}	*/
+
 
 
 // Creates the data source buttons and handles their functionality
@@ -264,10 +264,16 @@ function createDataButton(sourceName, roomName, deviceName, object, alertButton)
 				var service = object["Fiware-Service"];
 				var headers = await getHeader(servicePath, service);
 				var response = await browser(cometUrl, headers);
+				console.log("Dedee");
+				console.log(response);
+				console.log(service);
+				console.log(cometUrl);
+				console.log(servicePath);
 				var values = response.contextResponses[0].contextElement.attributes[0].values;
 				valueList.push({
 					name: description + ` (${object.id[deviceName].attributes[attribute[a]].unit}) ` + deviceName,
-					data: []
+					data: [],
+					startDate : []
 				})
 
 				// Clear the categories(time stamps) in order to use the most recent time stamps for the graph
@@ -282,11 +288,23 @@ function createDataButton(sourceName, roomName, deviceName, object, alertButton)
 							var valueL2 = values[i].attrValue.L2;
 							var valueL3 = values[i].attrValue.L3;
 							var avgValue = (valueL1 + valueL2 + valueL3) / 3;
-							valueList[a].data.push(parseFloat(parseFloat(avgValue).toFixed(1)));
+
+							// Testing 
+							if (valueList[a].startDate.length <= 0) {
+								//console.log(values[i].recvTime.toLocaleString());
+								valueList[a].startDate.push(new Date(values[i].recvTime.toLocaleString()));
+							}
+							valueList[a].data.push([new Date(values[i].recvTime.toLocaleString().substring(0, 16)).valueOf(), parseFloat(parseFloat(avgValue).toFixed(1))]);
+							// valueList[a].data.push(parseFloat(parseFloat(avgValue).toFixed(1)));
 							GraphData.categories.push(new Date(values[i].recvTime.toLocaleString()));
 						// Single value data
 						} else {
-							valueList[a].data.push(parseFloat(parseFloat(values[i].attrValue).toFixed(1)));
+							if (valueList[a].startDate.length <= 0) {
+								// console.log(values[i].recvTime.toLocaleString().substring(0, 16));
+								valueList[a].startDate.push(new Date(values[i].recvTime.toLocaleString()));
+							}
+							valueList[a].data.push([new Date(values[i].recvTime.toLocaleString().substring(0, 16)).valueOf(), parseFloat(parseFloat(values[i].attrValue).toFixed(1))]);
+							// valueList[a].data.push(parseFloat(parseFloat(values[i].attrValue).toFixed(1)));
 							GraphData.categories.push(new Date(values[i].recvTime).toLocaleString());
 						}
 					}
@@ -296,11 +314,12 @@ function createDataButton(sourceName, roomName, deviceName, object, alertButton)
 						for (var j=0; j < values[i].points.length; j++) {
 							var date = new Date(values[i]._id.origin);
 							// If value is undefined push null so that highcharts can still draw graph
+							/*
 							if (!values[i].points[j].max) {
 								valueList[a].data.push(null);
 							} else {
 								valueList[a].data.push(values[i].points[j].max);
-							}
+							} */
 							if (cometUrl.search("minute") > 0) {
 								date.setMinutes(date.getMinutes() + values[i].points[j].offset);
 							} else if (cometUrl.search("hour") > 0) {
@@ -310,6 +329,19 @@ function createDataButton(sourceName, roomName, deviceName, object, alertButton)
 							} else if (cometUrl.search("month") > 0) {
 								date.setMonth(date.getMonth() + values[i].points[j].offset);
 							}
+							if (!values[i].points[j].max) {
+								if(valueList[a].startDate.length <= 0) {
+									valueList[a].startDate.push(new Date(date).toLocaleString());
+								}
+								valueList[a].data.push([new Date(date).toLocaleString().valueOf(), null]);
+								// valueList[a].data.push(null);
+							} else {
+								if(valueList[a].startDate.length <= 0) {
+									valueList[a].startDate.push(new Date(date).toLocaleString());
+								}
+								valueList[a].data.push([new Date(date).toLocaleString().valueOf(), values[i].points[j].max]);
+								// valueList[a].data.push(values[i].points[j].max);
+							}							
 							GraphData.categories.push(new Date(date).toLocaleString());
 						}
 					}
@@ -439,6 +471,8 @@ function browser(searchUrl, searchHeaders) {
 				},
 				onFailure: function (response) {
 					MashupPlatform.widget.log("Unexpected response from the server");
+					console.log(searchUrl);
+					console.log(searchHeaders);
 					return cList;
 				}
 			});
